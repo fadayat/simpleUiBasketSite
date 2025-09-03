@@ -72,6 +72,7 @@ form {
   width: fit-content;
   padding: 32px 48px;
   border-radius: 10px;
+  width: 450px;
 }
 
 .form {
@@ -126,7 +127,6 @@ button[type="submit"] {
 }
 
 .register-form {
-  width: 450px;
   display: flex;
   flex-direction: column;
 }

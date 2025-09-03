@@ -1,6 +1,8 @@
 const usernameInp = document.getElementById("username");
 const passwordInp = document.getElementById("password");
 const emailInp = document.getElementById("email");
+const users = JSON.parse(localStorage.getItem("users") || "[]");
+console.log(users);
 
 function handleRegister(e) {
   e.preventDefault();
@@ -9,7 +11,11 @@ function handleRegister(e) {
     return;
   }
 
-  checkDetails(usernameInp.value, passwordInp.value, emailInp.value);
+  if (!checkDetails(usernameInp.value, passwordInp.value, emailInp.value)) {
+    return;
+  }
+
+  register(usernameInp.value, emailInp.value, passwordInp.value);
 }
 
 function validateInputs() {
@@ -53,7 +59,6 @@ function checkDetails(username, password, email) {
   // CHECK USERNAME AND EMAIL
 
   // CATCH USERS FROM LOCALSTORAGE
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
   console.log(users);
   usernameAlreadyExist = users.find((user) => user.username === username);
   emailAlreadyExist = users.find((user) => user.email === email);
@@ -61,13 +66,13 @@ function checkDetails(username, password, email) {
   // CHECK USERNAME AND GIVE MESG
   if (usernameAlreadyExist) {
     showMessage("Username already exist", "error", "username");
-    return;
+    return false;
   }
 
   // CHCEK EMAIL AND GIVE MESG
   if (emailAlreadyExist) {
     showMessage("Email already exist", "error", "email");
-    return;
+    return false;
   }
 
   // CHECK PASW AND GIVE MESG
@@ -77,11 +82,29 @@ function checkDetails(username, password, email) {
       "error",
       "password"
     );
-    return;
+    return false;
   }
+
+  return true;
 }
 // CHECK PASSWORD
 function checkPassword(password) {
   const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
   return regex.test(password);
+}
+
+// REGISTER USER
+
+function register(username, email, password) {
+  const user = {
+    id: Math.floor(Math.random() * 100),
+    username: username,
+    email: email,
+    password: password,
+  };
+
+  users.push(user);
+  localStorage.setItem("users", JSON.stringify(users));
+
+  console.log(users);
 }
