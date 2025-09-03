@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- FORM -->
+    <div class="form container">
+      <form onsubmit="handleRegister(event)" class="register-form gap">
+        <h2>Register</h2>
+
+        <div class="input-piece">
+          <label class="label" for="username">Username</label>
+
+          <input type="name" id="username" />
+        </div>
+
+        <div class="input-piece">
+          <label for="password">Password</label>
+
+          <input type="password" id="password" />
+        </div>
+
+        <div class="input-piece">
+          <label for="email">Email</label>
+
+          <input type="email" id="email" />
+        </div>
+
+        <button type="submit" id="submit">Login</button>
+      </form>
+    </div>
+    <!-- END OF FORM -->
+
+    <!-- MY SCRIPT -->
+    <script src="./js/register.js"></script>
+  </body>
+</html>

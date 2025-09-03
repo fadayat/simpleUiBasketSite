@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- FORM -->
+    <div class="form container">
+      <form onsubmit="handleLogin(event)">
+        <h2>Enter Your Account</h2>
+
+        <div class="input_box">
+          <label class="label" for="username">Username</label>
+          <input type="text" id="username" />
+        </div>
+
+        <br />
+
+        <div class="input_box">
+          <label for="password">Password</label>
+          <input type="password" id="password" />
+        </div>
+        <br />
+
+        <button type="submit" id="submit">Login</button>
+      </form>
+    </div>
+    <!-- END OF FORM -->
+
+    <!-- MY SCRIPT -->
+    <script src="./js/login.js"></script>
+  </body>
+</html>
