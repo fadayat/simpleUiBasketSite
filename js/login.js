@@ -1,3 +1,7 @@
+if (localStorage.getItem("loggedInUser")) {
+  window.location.href = "index.html";
+}
+
 // MOCK USERS
 const users = [
   {
@@ -50,6 +54,7 @@ function handleLogin(e) {
     // succesfull login
     localStorage.setItem("loggedInUser", JSON.stringify(user));
     showMessage("Login successful!", "success", "password");
+    window.location.href = "index.html";
   }
 }
 

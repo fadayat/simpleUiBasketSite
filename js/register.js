@@ -96,8 +96,9 @@ function checkPassword(password) {
 // REGISTER USER
 
 function register(username, email, password) {
+  let lastId = users[users.length - 1].id;
   const user = {
-    id: Math.floor(Math.random() * 100),
+    id: lastId + 1,
     username: username,
     email: email,
     password: password,
@@ -107,4 +108,6 @@ function register(username, email, password) {
   localStorage.setItem("users", JSON.stringify(users));
 
   console.log(users);
+
+  alert("ugurla qeydiyyatdan kecdiniz");
 }
