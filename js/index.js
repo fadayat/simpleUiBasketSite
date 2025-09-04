@@ -4,18 +4,29 @@ const buyBtn = document.querySelector(".buyPrd");
 const addToBasketBtn = document.querySelector(".addToBasket");
 const userIcon = document.querySelector(".fa-user");
 const cartIcon = document.querySelector(".fa-cart-shopping");
+const ul = document.querySelector(".ul");
 
 document.addEventListener("DOMContentLoaded", () => {
   const hasUser = localStorage.getItem("loggedInUser");
 
-  loginLogut(hasUser);
+  loginLogout(hasUser);
+  const user = JSON.parse(hasUser);
+
+  const nameLi = document.createElement("li");
+  nameLi.textContent = `ad: ${user.username}`;
+
+  const emailLi = document.createElement("li");
+  emailLi.textContent = `email: ${user.email}`;
+
+  ul.appendChild(nameLi);
+  ul.appendChild(emailLi);
 });
 
 logout.addEventListener("click", () => {
   logoutClickFn();
 });
 
-function loginLogut(hasUser) {
+function loginLogout(hasUser) {
   if (hasUser) {
     loginStyleFn();
   } else {

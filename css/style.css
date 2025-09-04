@@ -148,3 +148,29 @@ button[type="submit"] {
   border: 1px solid #ccc;
   cursor: not-allowed;
 }
+.user {
+  position: relative;
+}
+
+.user .info {
+  width: 200px;
+  max-width: 300px;
+  background-color: antiquewhite;
+  position: absolute;
+  right: 0;
+  padding: 24px 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  border-radius: 5px;
+}
+
+.user:hover .info {
+  opacity: 1;
+  visibility: visible;
+  cursor: pointer;
+}
+
+.none {
+  display: none;
+}
