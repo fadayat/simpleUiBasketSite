@@ -12,6 +12,7 @@ const emptyLi = document.querySelector(".empty");
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUser();
+  console.log(user);
 
   loginLogout(user);
 
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 logout.addEventListener("click", () => {
   logoutClickFn();
+  basketUl.innerHTML = "";
 });
 
 function getUser() {
@@ -86,16 +88,20 @@ function addBasketItems(user) {
   if (user.basket) {
     emptyLi.remove();
 
-    itemAddToBasket(user.basket);
+    itemAddToBasket(user);
   }
 }
 function checkBasket(user) {
+  basketUl.innerHTML = "";
+
   if (user.basket) {
     itemAddToBasket(user);
   }
 }
 
 function itemAddToBasket(user) {
+  basketUl.innerHTML = "";
+
   user.basket.forEach((item) => {
     const itemLi = document.createElement("li");
     itemLi.classList.add("basket-item");
