@@ -148,11 +148,13 @@ button[type="submit"] {
   border: 1px solid #ccc;
   cursor: not-allowed;
 }
-.user {
+
+/* USER HOVER */
+.hoverDiv {
   position: relative;
 }
 
-.user .info {
+.hoverDiv .content {
   width: 200px;
   max-width: 300px;
   background-color: antiquewhite;
@@ -161,11 +163,11 @@ button[type="submit"] {
   padding: 24px 8px;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
   border-radius: 5px;
 }
 
-.user:hover .info {
+.hoverDiv:hover .content {
   opacity: 1;
   visibility: visible;
   cursor: pointer;
@@ -173,4 +175,41 @@ button[type="submit"] {
 
 .none {
   display: none;
+}
+
+/* END OF */
+
+/* ITEM CSS */
+
+.itemImg {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+html {
+  scrollbar-width: none;
+}
+
+.basketUl {
+  scrollbar-width: none;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.finalPrice {
+  color: red;
+}
+
+.inStock {
+  color: green;
+}
+
+.noStock {
+  color: red;
+}
+
+.product-info {
+  margin: 20px 0;
 }

@@ -102,6 +102,7 @@ function register(username, email, password) {
     username: username,
     email: email,
     password: password,
+    basket: [],
   };
 
   users.push(user);

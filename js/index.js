@@ -4,27 +4,34 @@ const buyBtn = document.querySelector(".buyPrd");
 const addToBasketBtn = document.querySelector(".addToBasket");
 const userIcon = document.querySelector(".fa-user");
 const cartIcon = document.querySelector(".fa-cart-shopping");
-const ul = document.querySelector(".ul");
+const userUl = document.querySelector(".userUl");
+const basketUl = document.querySelector(".basketUl");
+const emptyLi = document.querySelector(".empty");
+
+// console.log(getUser());
 
 document.addEventListener("DOMContentLoaded", () => {
-  const hasUser = localStorage.getItem("loggedInUser");
+  const user = getUser();
 
-  loginLogout(hasUser);
-  const user = JSON.parse(hasUser);
+  loginLogout(user);
 
-  const nameLi = document.createElement("li");
-  nameLi.textContent = `ad: ${user.username}`;
+  userInfoAddHover(user);
 
-  const emailLi = document.createElement("li");
-  emailLi.textContent = `email: ${user.email}`;
+  checkBasket(user);
 
-  ul.appendChild(nameLi);
-  ul.appendChild(emailLi);
+  addBasketItems(user);
 });
 
 logout.addEventListener("click", () => {
   logoutClickFn();
 });
+
+function getUser() {
+  const userHas = localStorage.getItem("loggedInUser");
+  const user = JSON.parse(userHas);
+
+  return user;
+}
 
 function loginLogout(hasUser) {
   if (hasUser) {
@@ -61,4 +68,58 @@ function logoutAllStyle() {
   addToBasketBtn.classList.add("disabled");
   userIcon.style.display = "none";
   cartIcon.style.display = "none";
+}
+
+// ADD USER INFO ON HOVER
+function userInfoAddHover(user) {
+  const nameLi = document.createElement("li");
+  nameLi.textContent = `ad: ${user.username}`;
+
+  const emailLi = document.createElement("li");
+  emailLi.textContent = `email: ${user.email}`;
+
+  userUl.appendChild(nameLi);
+  userUl.appendChild(emailLi);
+}
+
+function addBasketItems(user) {
+  if (user.basket) {
+    emptyLi.remove();
+
+    itemAddToBasket(user.basket);
+  }
+}
+function checkBasket(user) {
+  if (user.basket) {
+    itemAddToBasket(user);
+  }
+}
+
+function itemAddToBasket(user) {
+  user.basket.forEach((item) => {
+    const itemLi = document.createElement("li");
+    itemLi.classList.add("basket-item");
+
+    const discountedPrice = Math.floor(item.price * (1 - item.discount / 100));
+
+    const inStockClass = item.inStock ? "inStock" : "noStock";
+    const inStockText = item.inStock ? "in Stock" : "No Stock";
+
+    itemLi.innerHTML = `
+  <div class="basket-product">
+    <img class="itemImg" src="${item.image}" alt="${item.productName}" />
+    <div class="product-info">
+      <h3>${item.productName}</h3>
+      <p> Price:  $${item.price}</p>
+      <p> Discount:  ${item.discount}%</p>
+      <p class="finalPrice"> Final Price:  $${discountedPrice}</p>
+      <p> Count:  ${item.quantity}</p>
+      <p class="${inStockClass}">  ${inStockText}</p>
+      <hr/>
+    </div>
+  </div>
+`;
+
+    basketUl.appendChild(itemLi);
+  });
 }
