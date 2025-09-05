@@ -3,7 +3,7 @@ if (localStorage.getItem("loggedInUser")) {
 }
 
 // MOCK USERS
-const users = [
+let users = [
   {
     id: 1,
     username: "fake",
@@ -82,6 +82,9 @@ const users = [
     ],
   },
 ];
+
+users = localStorage.getItem("users");
+users = JSON.parse(users);
 
 localStorage.setItem("users", JSON.stringify(users));
 

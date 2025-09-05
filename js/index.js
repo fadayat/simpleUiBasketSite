@@ -7,8 +7,6 @@ const cartIcon = document.querySelector(".fa-cart-shopping");
 const userUl = document.querySelector(".userUl");
 const basketUl = document.querySelector(".basketUl");
 const emptyLi = document.querySelector(".empty");
-// const minusButton = document.getElementsByClassName("fa-minus");
-// const plusButton = document.getElementsByClassName("fa-plus");
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUser();
@@ -49,10 +47,13 @@ function loginStyleFn() {
   logout.style.display = "inline-block";
   buyBtn.classList.remove("disabled");
   addToBasketBtn.classList.remove("disabled");
+  userIcon.style.display = "inline-block";
+  cartIcon.style.display = "inline-block";
 }
 
 function logoutStyleFn() {
   console.log("User is not logged in.");
+  saveUser();
 
   logoutAllStyle();
 }
@@ -70,10 +71,15 @@ function logoutAllStyle() {
   addToBasketBtn.classList.add("disabled");
   userIcon.style.display = "none";
   cartIcon.style.display = "none";
+  userUl.innerHTML = "";
+  basketUl.innerHTML = "";
 }
 
-// ADD USER INFO ON HOVER
 function userInfoAddHover(user) {
+  userUl.innerHTML = "";
+
+  if (!user) return;
+
   const nameLi = document.createElement("li");
   nameLi.textContent = `ad: ${user.username}`;
 
@@ -85,65 +91,89 @@ function userInfoAddHover(user) {
 }
 
 function addBasketItems(user) {
-  if (user.basket) {
-    emptyLi.remove();
+  if (user && user.basket && user.basket.length > 0) {
+    if (emptyLi) emptyLi.remove();
 
     itemAddToBasket(user);
+    addEventToQuantityButtons();
   }
 }
+
 function checkBasket(user) {
   basketUl.innerHTML = "";
 
-  if (user.basket) {
+  if (user && user.basket && user.basket.length > 0) {
     itemAddToBasket(user);
+    addEventToQuantityButtons();
+
+    if (emptyLi) {
+      emptyLi.remove();
+    }
+  } else {
+    if (emptyLi) {
+      basketUl.appendChild(emptyLi);
+    }
   }
 }
 
 function itemAddToBasket(user) {
   basketUl.innerHTML = "";
-  let totalPrice = 0; //
+
+  let totalPrice = 0;
 
   user.basket.forEach((item) => {
-    const itemLi = document.createElement("li");
-    itemLi.classList.add("basket-item");
+    const quantity = Number(item.quantity);
 
-    const discountedPrice = Math.floor(item.price * (1 - item.discount / 100));
+    if (quantity > 0) {
+      const discountedPrice = Math.floor(
+        item.price * (1 - item.discount / 100)
+      );
+      if (item.inStock) {
+        totalPrice += discountedPrice * quantity;
+      }
+      const inStockClass = item.inStock ? "inStock" : "noStock";
+      const inStockText = item.inStock ? "In Stock" : "No Stock";
 
-    if (item.inStock) {
-      totalPrice += discountedPrice * item.quantity;
+      const itemLi = document.createElement("li");
+      itemLi.classList.add("basket-item");
+
+      itemLi.innerHTML = `
+        <div class="basket-product">
+          <img class="itemImg" src="${item.image}" alt="${item.productName}" />
+          <div class="product-info">
+            <h3>${item.productName}</h3>
+            <p>Price: ${item.price}</p>
+            <p>Discount: ${item.discount}%</p>
+            <p class="finalPrice"> Final Price: ${discountedPrice}</p>
+            <p class="align-center">Count:
+              <i data-id="${item.productId}" class="fa-solid fa-minus"></i>
+              <span class="countSpan">${quantity}</span>
+              <i class="fa-solid fa-plus" data-id="${item.productId}"></i>
+            </p>
+            <p class="${inStockClass}">${inStockText}</p>
+            <hr/>
+          </div>
+        </div>
+      `;
+
+      basketUl.appendChild(itemLi);
     }
-    const inStockClass = item.inStock ? "inStock" : "noStock";
-    const inStockText = item.inStock ? "in Stock" : "No Stock";
-
-    console.log(item.productID);
-
-    itemLi.innerHTML = `
-  <div class="basket-product">
-    <img class="itemImg" src="${item.image}" alt="${item.productName}" />
-    <div class="product-info">
-      <h3>${item.productName}</h3>
-      <p> Price:  ${item.price}</p>
-      <p class="finalPrice"> Final Price:  ${discountedPrice}</p>
-      <p class="align-center"> Count:
-       <i data-id="${item.productId}" class="fa-solid fa-minus"></i>
-        <span class="countSpan" >${item.quantity} </span>
-      <i  class="fa-solid fa-plus" data-id="${item.productId}" ></i></p>
-      <p class="${inStockClass}">  ${inStockText}</p>
-      <hr/>
-    </div>
-  </div>
-`;
-
-    basketUl.appendChild(itemLi);
   });
 
-  if (user.basket && user.basket.length > 0) {
-    const totalPriceLi = document.createElement("li");
+  totalPriced(totalPrice, basketUl);
+}
 
-    totalPriceLi.textContent = `Total Price: ${totalPrice}$`;
-    basketUl.appendChild(totalPriceLi);
+function totalPriced(totalPrice, basketUl) {
+  const existingTotalLi = basketUl.querySelector(".totalPrice");
+  if (existingTotalLi) {
+    existingTotalLi.remove();
   }
-  addEventToQuantityButtons();
+
+  const totalLi = document.createElement("li");
+  totalLi.classList.add("totalPrice");
+  totalLi.textContent = `Total Price: ${totalPrice}$`;
+
+  basketUl.appendChild(totalLi);
 }
 
 function addEventToQuantityButtons() {
@@ -165,16 +195,32 @@ function addEventToQuantityButtons() {
   });
 }
 
-function handleMinusClick(Btnid) {
-  updateQuantity();
+function handleMinusClick(btnId) {
+  updateQuantity(btnId, "minus");
 }
 
-function handlePlusClick(id) {
-  updateQuantity();
+function handlePlusClick(btnId) {
+  updateQuantity(btnId, "plus");
 }
 
 function saveUser(user) {
   localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+  let users = localStorage.getItem("users");
+  if (users) {
+    users = JSON.parse(users);
+  } else {
+    users = [];
+  }
+
+  users = users.map((u) => {
+    if (u.id === user.id) {
+      return user;
+    }
+    return u;
+  });
+
+  localStorage.setItem("users", JSON.stringify(users));
 }
 
 function updateQuantity(productId, type) {
@@ -186,12 +232,15 @@ function updateQuantity(productId, type) {
 
   if (type === "minus" && product.quantity > 0) {
     product.quantity--;
+
+    if (product.quantity === 0) {
+      user.basket = user.basket.filter((item) => item.productId !== productId);
+    }
   } else if (type === "plus") {
     product.quantity++;
   }
 
-  //
-
   saveUser(user);
+
   checkBasket(user);
 }
