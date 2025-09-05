@@ -213,3 +213,17 @@ html {
 .product-info {
   margin: 20px 0;
 }
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.fa-minus,
+.fa-plus {
+  font-size: 20px;
+}
+
+.countSpan {
+  margin: 0 15px;
+}

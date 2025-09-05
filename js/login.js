@@ -17,7 +17,7 @@ const users = [
         category: "Smartphone",
         price: 2199,
         discount: 10, // %
-        quantity: 1,
+        quantity: 100,
         inStock: true,
         rating: 4.8,
         description:
