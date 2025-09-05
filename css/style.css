@@ -3,8 +3,8 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30px 0;
   background-color: azure;
+  min-height: 100px;
 }
 
 nav i {
@@ -59,6 +59,13 @@ nav i {
   background-color: blanchedalmond;
 }
 
+.auth-icons {
+  display: flex;
+  gap: 10px;
+  min-width: 200px;
+  justify-content: flex-end;
+}
+
 /* END OF BUTTON CSS */
 
 /* FORM */
@@ -72,6 +79,7 @@ form {
   width: fit-content;
   padding: 32px 48px;
   border-radius: 10px;
+  width: 450px;
 }
 
 .form {
@@ -126,11 +134,96 @@ button[type="submit"] {
 }
 
 .register-form {
-  width: 450px;
   display: flex;
   flex-direction: column;
 }
 
 .gap {
   gap: 30px;
+}
+
+.disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  border: 1px solid #ccc;
+  cursor: not-allowed;
+}
+
+/* USER HOVER */
+.hoverDiv {
+  position: relative;
+}
+
+.hoverDiv .content {
+  width: 200px;
+  max-width: 300px;
+  background-color: antiquewhite;
+  position: absolute;
+  right: 0;
+  padding: 24px 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  border-radius: 5px;
+}
+
+.hoverDiv:hover .content {
+  opacity: 1;
+  visibility: visible;
+  cursor: pointer;
+}
+
+.none {
+  display: none;
+}
+
+/* END OF */
+
+/* ITEM CSS */
+
+.itemImg {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+html {
+  scrollbar-width: none;
+}
+
+.basketUl {
+  scrollbar-width: none;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.finalPrice {
+  color: red;
+}
+
+.inStock {
+  color: green;
+}
+
+.noStock {
+  color: red;
+}
+
+.product-info {
+  margin: 20px 0;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.fa-minus,
+.fa-plus {
+  font-size: 20px;
+}
+
+.countSpan {
+  margin: 0 15px;
 }

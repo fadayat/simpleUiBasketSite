@@ -27,10 +27,25 @@
           <a href="#">About</a>
         </div>
 
-        <div class="">
-          <a href="/login.html" class="btn">Login</a>
-          <i class="fa-solid fa-user"></i>
-          <i class="fa-solid fa-cart-shopping"></i>
+        <div class="auth-icons">
+          <a href="/login.html" id="login" class="btn">Login</a>
+          <div class="hoverDiv">
+            <i class="fa-solid fa-user"> </i>
+            <div class="content">
+              <ul class="userUl"></ul>
+            </div>
+          </div>
+
+          <div class="hoverDiv">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <div class="content">
+              <ul class="basketUl">
+                <li class="empty">Your card is empty</li>
+                <br />
+              </ul>
+            </div>
+          </div>
+          <i class="fa-solid fa-right-from-bracket"></i>
         </div>
       </nav>
       <!-- END OF NAVBAR -->
