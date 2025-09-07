@@ -96,7 +96,8 @@ function checkPassword(password) {
 // REGISTER USER
 
 function register(username, email, password) {
-  let lastId = users[users.length - 1].id;
+  users.length == 0 ? (lastId = 1) : (lastId = users[users.length - 1].id);
+
   const user = {
     id: lastId + 1,
     username: username,
