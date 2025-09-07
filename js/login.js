@@ -1,4 +1,5 @@
-if (localStorage.getItem("loggedInUser")) {
+const loggedIn = localStorage.getItem("loggedInUser");
+if (loggedIn && loggedIn !== undefined) {
   window.location.href = "index.html";
 }
 
