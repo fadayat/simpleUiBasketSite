@@ -111,5 +111,11 @@ function register(username, email, password) {
 
   console.log(users);
 
-  alert("ugurla qeydiyyatdan kecdiniz");
+  showMessage(
+    "Register successful!, you are redirecting to login..",
+    "success",
+    "email"
+  );
+
+  setTimeout(() => (window.location.href = "login.html"), 1500);
 }
