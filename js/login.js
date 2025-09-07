@@ -83,10 +83,14 @@ let users = [
   },
 ];
 
-users = localStorage.getItem("users");
-users = JSON.parse(users);
+// CHECK IF USERS EXIST
+let storedUsers = localStorage.getItem("users");
 
-localStorage.setItem("users", JSON.stringify(users));
+if (!storedUsers) {
+  localStorage.setItem("users", JSON.stringify(users));
+} else {
+  users = JSON.parse(storedUsers);
+}
 
 // SELECT INPUTS
 const usernameInp = document.getElementById("username");
