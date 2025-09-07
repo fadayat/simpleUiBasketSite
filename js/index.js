@@ -28,9 +28,11 @@ logout.addEventListener("click", () => {
 
 function getUser() {
   const userHas = localStorage.getItem("loggedInUser");
-  const user = JSON.parse(userHas);
-
-  return user;
+  if (userHas) {
+    const user = JSON.parse(userHas);
+    return user;
+  }
+  return false;
 }
 
 function loginLogout(hasUser) {
