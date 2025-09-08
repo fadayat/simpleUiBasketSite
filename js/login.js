@@ -13,53 +13,7 @@ let users = [
     username: "fake",
     password: "1234",
     email: "fake@gmail.com",
-    basket: [
-      {
-        productId: 1,
-        productName: "iPhone 13",
-        brand: "Apple",
-        category: "Smartphone",
-        price: 2199,
-        discount: 10, // %
-        quantity: 23,
-        inStock: true,
-        rating: 4.8,
-        description:
-          "Apple iPhone 13 with A15 Bionic chip and dual-camera system.",
-        image:
-          "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      },
-      {
-        productId: 2,
-        productName: "Samsung Galaxy S22",
-        brand: "Samsung",
-        category: "Smartphone",
-        price: 1899,
-        discount: 5,
-        quantity: 2,
-        inStock: true,
-        rating: 4.5,
-        description:
-          "Samsung Galaxy S22 with Dynamic AMOLED display and triple cameras.",
-        image:
-          "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      },
-      {
-        productId: 3,
-        productName: "Google Pixel 7",
-        brand: "Google",
-        category: "Smartphone",
-        price: 1699,
-        discount: 0,
-        quantity: 1,
-        inStock: false,
-        rating: 4.6,
-        description:
-          "Google Pixel 7 with Tensor chip and pure Android experience.",
-        image:
-          "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      },
-    ],
+    basket: [],
   },
 
   {
@@ -67,23 +21,7 @@ let users = [
     username: "fake2",
     password: "1234",
     email: "fake2@gmail.com",
-    basket: [
-      {
-        productId: 1,
-        productName: "iPhone 13",
-        brand: "Apple",
-        category: "Smartphone",
-        price: 2199,
-        discount: 10, // %
-        quantity: 1,
-        inStock: true,
-        rating: 4.8,
-        description:
-          "Apple iPhone 13 with A15 Bionic chip and dual-camera system.",
-        image:
-          "https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg",
-      },
-    ],
+    basket: [],
   },
 ];
 

@@ -8,6 +8,7 @@ const userUl = document.querySelector(".userUl");
 const basketUl = document.querySelector(".basketUl");
 const emptyLi = document.querySelector(".empty");
 const cards = document.querySelector(".cards");
+let products = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUser();
@@ -159,7 +160,9 @@ function itemAddToBasket(user) {
 
       itemLi.innerHTML = `
         <div class="basket-product">
-          <img class="itemImg" src="${item.image}" alt="${item.productName}" />
+          <img class="itemImg" src="${"./img/card.jpeg"}" alt="${
+        item.productName
+      }" />
           <div class="product-info">
             <h3>${item.productName}</h3>
             <p>Price: ${item.price}</p>
@@ -271,15 +274,17 @@ async function fetchProducts() {
       products = data;
       return products;
     })
-    .catch((error) => console.log("xeta bas verdi", error));
+    .catch((error) => console.log("error found", error));
 
   showProducts(products);
+
+  buyBtnsEventListener();
 }
 
 function showProducts(products) {
   products.forEach((product) => {
     const shortDescription =
-      product.description.length > 10
+      product.description.length > 15
         ? product.description.slice(0, 20) + "..."
         : product.description;
 
@@ -293,11 +298,57 @@ function showProducts(products) {
           </div>
         
           <div class="auth btns">
-            <button data-id=${product.productId} class="btn buyPrd">Al</button>
-            <button data-id=${product.productId} class="btn addToBasket">Sebete at</button>
+            <button data-id=${product.productId} onclick="handleAddBasket(${product.productId})" class="btn buyPrd">Sebete at</button>
+            <button data-id=${product.productId} class="btn addToBasket">Al</button>
           </div>
         </div>
     `;
     cards.appendChild(card);
+  });
+}
+
+function buyBtnsEventListener() {
+  const buyBtns = document.querySelectorAll(".buyPrd");
+  const addBtns = document.querySelectorAll(".addToBasket");
+
+  buyBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      console.log("clicked buy:", btn.dataset.id);
+
+      const user = getUser();
+
+      if (!user) {
+        alert("please login to add product");
+        return;
+      }
+      const productId = Number(btn.dataset.id);
+
+      const productToAdd = products.find((p) => p.productId == productId);
+      console.log(productToAdd);
+
+      const existingItemInBasket = user.basket.find(
+        (basketItem) => basketItem.productId == productId
+      );
+
+      if (existingItemInBasket) {
+        existingItemInBasket.quantity++;
+      } else {
+        const newItemForBasket = {
+          ...productToAdd,
+          quantity: 1,
+        };
+        user.basket.push(newItemForBasket);
+        console.log("product added to basket");
+      }
+
+      saveUser(user);
+      checkBasket(user);
+    });
+  });
+
+  addBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      console.log("clicked add to basket:", btn.dataset.id);
+    });
   });
 }
