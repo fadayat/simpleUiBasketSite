@@ -1,3 +1,6 @@
+const usernameInp = document.getElementById("username");
+const passwordInp = document.getElementById("password");
+
 const loggedIn = localStorage.getItem("loggedInUser");
 if (loggedIn && loggedIn !== undefined) {
   window.location.href = "index.html";
@@ -87,15 +90,13 @@ let users = [
 // CHECK IF USERS EXIST
 let storedUsers = localStorage.getItem("users");
 
-if (!storedUsers.length == 0) {
+if (!storedUsers) {
   localStorage.setItem("users", JSON.stringify(users));
 } else {
   users = JSON.parse(storedUsers);
 }
 
 // SELECT INPUTS
-const usernameInp = document.getElementById("username");
-const passwordInp = document.getElementById("password");
 
 // LOGIN FUNCTION
 function handleLogin(e) {
