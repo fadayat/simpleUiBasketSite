@@ -10,6 +10,11 @@ const emptyLi = document.querySelector(".empty");
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUser();
+
+  if (!user) {
+    loginStyleFn();
+  }
+
   console.log(user);
 
   loginLogout(user);
@@ -28,9 +33,18 @@ logout.addEventListener("click", () => {
 
 function getUser() {
   const userHas = localStorage.getItem("loggedInUser");
-  const user = JSON.parse(userHas);
 
-  return user;
+  if (!userHas) {
+    return false;
+  }
+
+  try {
+    const user = JSON.parse(userHas);
+    return user;
+  } catch (e) {
+    console.error("JSON parse error in getUser:", e);
+    return false;
+  }
 }
 
 function loginLogout(hasUser) {
@@ -204,23 +218,20 @@ function handlePlusClick(btnId) {
 }
 
 function saveUser(user) {
-  localStorage.setItem("loggedInUser", JSON.stringify(user));
+  if (!user) return;
 
-  let users = localStorage.getItem("users");
-  if (users) {
-    users = JSON.parse(users);
-  } else {
-    users = [];
+  try {
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+    let users = localStorage.getItem("users");
+    users = users ? JSON.parse(users) : [];
+
+    users = users.map((u) => (u.id === user.id ? user : u));
+
+    localStorage.setItem("users", JSON.stringify(users));
+  } catch (e) {
+    console.error("saveUser error:", e);
   }
-
-  users = users.map((u) => {
-    if (u.id === user.id) {
-      return user;
-    }
-    return u;
-  });
-
-  localStorage.setItem("users", JSON.stringify(users));
 }
 
 function updateQuantity(productId, type) {

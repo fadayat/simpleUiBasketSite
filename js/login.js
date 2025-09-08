@@ -1,4 +1,5 @@
-if (localStorage.getItem("loggedInUser")) {
+const loggedIn = localStorage.getItem("loggedInUser");
+if (loggedIn && loggedIn !== undefined) {
   window.location.href = "index.html";
 }
 
@@ -83,10 +84,14 @@ let users = [
   },
 ];
 
-users = localStorage.getItem("users");
-users = JSON.parse(users);
+// CHECK IF USERS EXIST
+let storedUsers = localStorage.getItem("users");
 
-localStorage.setItem("users", JSON.stringify(users));
+if (!storedUsers.length == 0) {
+  localStorage.setItem("users", JSON.stringify(users));
+} else {
+  users = JSON.parse(storedUsers);
+}
 
 // SELECT INPUTS
 const usernameInp = document.getElementById("username");

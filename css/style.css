@@ -227,3 +227,14 @@ html {
 .countSpan {
   margin: 0 15px;
 }
+
+
+.totalPrice {
+  position: sticky;
+  bottom: -20px;
+  background-color: antiquewhite;
+  padding: 15px 10px;
+  border-top: 2px solid #ddd;
+  font-weight: bold;
+  text-align: right;
+}
