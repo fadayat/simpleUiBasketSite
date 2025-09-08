@@ -87,7 +87,7 @@ let users = [
 // CHECK IF USERS EXIST
 let storedUsers = localStorage.getItem("users");
 
-if (!storedUsers) {
+if (!storedUsers.length == 0) {
   localStorage.setItem("users", JSON.stringify(users));
 } else {
   users = JSON.parse(storedUsers);

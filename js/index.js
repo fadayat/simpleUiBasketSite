@@ -10,6 +10,11 @@ const emptyLi = document.querySelector(".empty");
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUser();
+
+  if (!user) {
+    loginStyleFn();
+  }
+
   console.log(user);
 
   loginLogout(user);
