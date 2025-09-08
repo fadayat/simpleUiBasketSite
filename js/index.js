@@ -1,12 +1,13 @@
 const login = document.getElementById("login");
 const logout = document.querySelector(".fa-right-from-bracket");
-const buyBtn = document.querySelector(".buyPrd");
-const addToBasketBtn = document.querySelector(".addToBasket");
+// const buyBtn = document.querySelector(".buyPrd");
+// const addToBasketBtn = document.querySelector(".addToBasket");
 const userIcon = document.querySelector(".fa-user");
 const cartIcon = document.querySelector(".fa-cart-shopping");
 const userUl = document.querySelector(".userUl");
 const basketUl = document.querySelector(".basketUl");
 const emptyLi = document.querySelector(".empty");
+const cards = document.querySelector(".cards");
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUser();
@@ -14,8 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!user) {
     loginStyleFn();
   }
-
-  console.log(user);
+  fetchProducts();
 
   loginLogout(user);
 
@@ -59,8 +59,11 @@ function loginStyleFn() {
   console.log("User is logged in.");
   login.style.display = "none";
   logout.style.display = "inline-block";
-  buyBtn.classList.remove("disabled");
-  addToBasketBtn.classList.remove("disabled");
+
+  document.querySelectorAll(".buyPrd, .addToBasket").forEach((btn) => {
+    btn.classList.remove("disabled");
+  });
+
   userIcon.style.display = "inline-block";
   cartIcon.style.display = "inline-block";
 }
@@ -81,8 +84,11 @@ function logoutClickFn() {
 function logoutAllStyle() {
   login.style.display = "inline-block";
   logout.style.display = "none";
-  buyBtn.classList.add("disabled");
-  addToBasketBtn.classList.add("disabled");
+
+  document.querySelectorAll(".buyPrd, .addToBasket").forEach((btn) => {
+    btn.classList.add("disabled");
+  });
+
   userIcon.style.display = "none";
   cartIcon.style.display = "none";
   userUl.innerHTML = "";
@@ -254,4 +260,44 @@ function updateQuantity(productId, type) {
   saveUser(user);
 
   checkBasket(user);
+}
+
+async function fetchProducts() {
+  products = await fetch(
+    "https://68be722b227c48698f86d903.mockapi.io/api/products/product"
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      products = data;
+      return products;
+    })
+    .catch((error) => console.log("xeta bas verdi", error));
+
+  showProducts(products);
+}
+
+function showProducts(products) {
+  products.forEach((product) => {
+    const shortDescription =
+      product.description.length > 10
+        ? product.description.slice(0, 20) + "..."
+        : product.description;
+
+    const card = document.createElement("div");
+    card.innerHTML = `
+    <div class="card">
+          <img src="./img/card.jpeg" alt="${shortDescription}" />
+          <div class="card_content">
+            <h3>${product.productName}</h3>
+            <p>${shortDescription}<a href='#' class='red'>read more</a></p>
+          </div>
+        
+          <div class="auth btns">
+            <button data-id=${product.productId} class="btn buyPrd">Al</button>
+            <button data-id=${product.productId} class="btn addToBasket">Sebete at</button>
+          </div>
+        </div>
+    `;
+    cards.appendChild(card);
+  });
 }

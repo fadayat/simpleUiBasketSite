@@ -19,10 +19,13 @@ nav i {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 40px;
+
+  padding: 50px 0;
 }
 
 .card {
+  height: 300px;
   max-width: 200px;
   margin-top: 20px;
 }
@@ -237,4 +240,8 @@ html {
   border-top: 2px solid #ddd;
   font-weight: bold;
   text-align: right;
+}
+
+.red{
+  color: red;
 }
