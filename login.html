@@ -3,36 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <!-- FORM -->
-    <div class="form container">
+    <div class="form-container">
       <form onsubmit="handleLogin(event)">
         <h2>Enter Your Account</h2>
 
         <div class="input_box">
           <label class="label" for="username">Username</label>
-          <input type="text" id="username" />
+          <input type="text" id="username" placeholder="Enter your username" />
         </div>
-
-        <br />
 
         <div class="input_box">
           <label for="password">Password</label>
-          <input type="password" id="password" />
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+          />
         </div>
-        <br />
 
         <button type="submit" id="submit">Login</button>
-        <a href="/register.html" class="input-box">didnt register?</a>
+
+        <div class="form-footer">
+          <a href="/register.html">Don't have an account? Register</a>
+        </div>
       </form>
     </div>
-    <!-- END OF FORM -->
-
-    <!-- MY SCRIPT -->
     <script src="./js/login.js"></script>
   </body>
 </html>
