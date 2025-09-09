@@ -388,3 +388,49 @@ button[type="submit"]:hover {
 .red {
   color: var(--danger-color);
 }
+
+/* TOAST NOTIFICATION  */
+
+#toast-notification {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 25px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: top 0.5s ease, opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#toast-notification.show {
+  top: 150px;
+  opacity: 1;
+  visibility: visible;
+}
+
+#toast-notification.success {
+  background-color: var(--success-color);
+}
+
+#toast-notification.error {
+  background-color: var(--danger-color);
+}
+
+/* BADGET */
+.basketIcon {
+  position: relative;
+}
+
+.badget {
+  font-size: 12px;
+  padding: 0 4px;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  position: absolute;
+  right: -4px;
+  top: -10px;
+}

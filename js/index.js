@@ -9,6 +9,7 @@ const basketUl = document.querySelector(".basketUl");
 const emptyLi = document.querySelector(".empty");
 const cards = document.querySelector(".cards");
 let products = [];
+const badge = document.querySelector(".badget");
 
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUser();
@@ -25,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
   checkBasket(user);
 
   addBasketItems(user);
+
+  updateBadge();
 });
 
 logout.addEventListener("click", () => {
@@ -78,7 +81,6 @@ function logoutStyleFn() {
 
 function logoutClickFn() {
   localStorage.removeItem("loggedInUser");
-  console.log("User logged out.");
   logoutAllStyle();
 }
 
@@ -94,6 +96,8 @@ function logoutAllStyle() {
   cartIcon.style.display = "none";
   userUl.innerHTML = "";
   basketUl.innerHTML = "";
+  badge.style.display = "none";
+  showMessage("successfully log out");
 }
 
 function userInfoAddHover(user) {
@@ -207,6 +211,7 @@ function addEventToQuantityButtons() {
     const btnId = btn.getAttribute("data-id");
     btn.addEventListener("click", () => {
       handleMinusClick(btnId);
+      updateBadge();
     });
   });
 
@@ -214,6 +219,7 @@ function addEventToQuantityButtons() {
     const btnId = btn.getAttribute("data-id");
     btn.addEventListener("click", () => {
       handlePlusClick(btnId);
+      updateBadge();
     });
   });
 }
@@ -255,6 +261,7 @@ function updateQuantity(productId, type) {
 
     if (product.quantity === 0) {
       user.basket = user.basket.filter((item) => item.productId !== productId);
+      showMessage("product removed from basket");
     }
   } else if (type === "plus") {
     product.quantity++;
@@ -298,8 +305,8 @@ function showProducts(products) {
           </div>
         
           <div class="auth btns">
-            <button data-id=${product.productId} onclick="handleAddBasket(${product.productId})" class="btn buyPrd">Sebete at</button>
-            <button data-id=${product.productId} class="btn addToBasket">Al</button>
+            <button data-id=${product.productId} onclick="handleAddBasket(${product.productId})" class="btn buyPrd">Add to Basket</button>
+            <button data-id=${product.productId} class="btn addToBasket">Buy</button>
           </div>
         </div>
     `;
@@ -312,13 +319,12 @@ function buyBtnsEventListener() {
   const addBtns = document.querySelectorAll(".addToBasket");
 
   buyBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      console.log("clicked buy:", btn.dataset.id);
-
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const user = getUser();
 
       if (!user) {
-        alert("please login to add product");
+        message("please login to add product", "error");
         return;
       }
       const productId = Number(btn.dataset.id);
@@ -338,17 +344,43 @@ function buyBtnsEventListener() {
           quantity: 1,
         };
         user.basket.push(newItemForBasket);
-        console.log("product added to basket");
       }
+      const message = "product added to basket";
+      showMessage(message);
 
       saveUser(user);
       checkBasket(user);
+
+      updateBadge();
     });
   });
 
   addBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
       console.log("clicked add to basket:", btn.dataset.id);
     });
   });
+}
+
+function showMessage(message, type = "success") {
+  const notification = document.getElementById("toast-notification");
+
+  notification.textContent = message;
+  notification.className = "";
+
+  notification.classList.add(type);
+  notification.classList.add("show");
+
+  setTimeout(() => notification.classList.remove("show"), 1000);
+}
+
+function updateBadge() {
+  const user = getUser();
+  const badge = document.querySelector(".badget");
+
+  const total = user.basket.reduce((acc, item) => {
+    return acc + item.quantity;
+  }, 0);
+
+  badge.textContent = total;
 }
