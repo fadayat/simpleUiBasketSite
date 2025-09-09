@@ -295,6 +295,7 @@ function showProducts(products) {
         ? product.description.slice(0, 20) + "..."
         : product.description;
 
+    const addBasketDisabled = product.inStock ? "" : "disabledForBadge";
     const card = document.createElement("div");
     card.innerHTML = `
     <div class="card">
@@ -305,7 +306,7 @@ function showProducts(products) {
           </div>
         
           <div class="auth btns">
-            <button data-id=${product.productId} onclick="handleAddBasket(${product.productId})" class="btn buyPrd">Add to Basket</button>
+            <button data-id=${product.productId} class="btn buyPrd  ${addBasketDisabled} ">Add to Basket</button>
             <button data-id=${product.productId} class="btn addToBasket">Buy</button>
           </div>
         </div>
@@ -331,7 +332,10 @@ function buyBtnsEventListener() {
 
       const productToAdd = products.find((p) => p.productId == productId);
       console.log(productToAdd);
-
+      if (!productToAdd.inStock) {
+        showMessage("unfortunetly no stock", "error");
+        return;
+      }
       const existingItemInBasket = user.basket.find(
         (basketItem) => basketItem.productId == productId
       );
@@ -375,12 +379,20 @@ function showMessage(message, type = "success") {
 }
 
 function updateBadge() {
+  if (!badge) return;
+
   const user = getUser();
-  const badge = document.querySelector(".badget");
 
-  const total = user.basket.reduce((acc, item) => {
-    return acc + item.quantity;
-  }, 0);
+  if (user && user.basket && user.basket.length > 0) {
+    const badge = document.querySelector(".badget");
 
-  badge.textContent = total;
+    const total = user.basket.reduce((acc, item) => {
+      return acc + item.quantity;
+    }, 0);
+    badge.style.display = "inline-block";
+
+    badge.textContent = total;
+  } else {
+    badge.style.display = "none";
+  }
 }

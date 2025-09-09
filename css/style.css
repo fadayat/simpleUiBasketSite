@@ -65,7 +65,9 @@ nav {
   box-shadow: var(--shadow);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 3000;
+  position: fixed;
+  width: 100%;
 }
 
 nav h2 {
@@ -433,4 +435,29 @@ button[type="submit"]:hover {
   position: absolute;
   right: -4px;
   top: -10px;
+}
+
+.disabledForBadge {
+  background-color: #e9ecef;
+  color: #0b3d70 !important;
+  cursor: not-allowed;
+}
+.disabledForBadge {
+  position: relative;
+}
+
+.disabledForBadge:hover::after {
+  width: 100%;
+  position: absolute;
+  content: "Unfortunately, no stock";
+  color: red;
+  font-size: 12px;
+  position: absolute;
+  top: 80%;
+  left: 0;
+  background-color: #fff;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 5000;
 }
