@@ -64,7 +64,7 @@ function loginStyleFn() {
   login.style.display = "none";
   logout.style.display = "inline-block";
 
-  document.querySelectorAll(".buyPrd, .addToBasket").forEach((btn) => {
+  document.querySelectorAll(".buyPrd").forEach((btn) => {
     btn.classList.remove("disabled");
   });
 
@@ -88,7 +88,7 @@ function logoutAllStyle() {
   login.style.display = "inline-block";
   logout.style.display = "none";
 
-  document.querySelectorAll(".buyPrd, .addToBasket").forEach((btn) => {
+  document.querySelectorAll(".buyPrd").forEach((btn) => {
     btn.classList.add("disabled");
   });
 
@@ -307,7 +307,6 @@ function showProducts(products) {
         
           <div class="auth btns">
             <button data-id=${product.productId} class="btn buyPrd  ${addBasketDisabled} ">Add to Basket</button>
-            <button data-id=${product.productId} class="btn addToBasket">Buy</button>
           </div>
         </div>
     `;
@@ -317,7 +316,6 @@ function showProducts(products) {
 
 function buyBtnsEventListener() {
   const buyBtns = document.querySelectorAll(".buyPrd");
-  const addBtns = document.querySelectorAll(".addToBasket");
 
   buyBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
