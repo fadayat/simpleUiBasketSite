@@ -68,6 +68,8 @@ nav {
   z-index: 3000;
   position: fixed;
   width: 100%;
+  right: 50%;
+  transform: translateX(50%);
 }
 
 nav h2 {
@@ -111,6 +113,7 @@ nav i:hover {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 30px;
   padding: 50px 0;
+  margin-top: 100px;
 }
 
 .card {
