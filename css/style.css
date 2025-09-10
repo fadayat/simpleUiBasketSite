@@ -390,6 +390,11 @@ button[type="submit"]:hover {
   cursor: not-allowed;
   pointer-events: none;
 }
+
+.enabled {
+  color: #28a745;
+}
+
 .red {
   color: var(--danger-color);
 }
@@ -443,6 +448,7 @@ button[type="submit"]:hover {
 .disabledForBadge {
   background-color: #e9ecef;
   color: #0b3d70 !important;
+  color: #adb5bd !important;
   cursor: not-allowed;
 }
 .disabledForBadge {

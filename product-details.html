@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+      integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/product-details.css" />
+  </head>
+
+  <body>
+    <header>
+      <nav class="container">
+        <h2>
+          <a href="./index.html" style="color: var(--primary-color)">LOGO</a>
+        </h2>
+        <div class="pages">
+          <a href="./index.html">Home</a>
+          <a href="#">About</a>
+        </div>
+        <div class="auth-icons">
+          <a href="./login.html" id="login" class="btn">Login</a>
+          <div class="hoverDiv">
+            <i class="fa-solid fa-user"> </i>
+            <div class="content">
+              <ul class="userUl"></ul>
+            </div>
+          </div>
+          <div class="hoverDiv">
+            <div class="basketIcon">
+              <i class="fa-solid fa-cart-shopping"> </i>
+              <span class="badget">0</span>
+            </div>
+            <div class="content">
+              <ul class="basketUl">
+                <li class="empty">Your card is empty</li>
+              </ul>
+            </div>
+          </div>
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container productDetails" id="productDetails">
+      <div class="productImage" id="productImage">
+        <img
+          class="productImageImg"
+          id="productImageImg"
+          src="./img/card.jpeg"
+          alt="image"
+        />
+      </div>
+
+      <div class="productInfo" id="productInfo">
+        <h1 class="productName" id="productName">Prodcut name</h1>
+
+        <p class="productDescription" id="productDescription">Desc</p>
+
+        <p class="productPrice" id="productPrice">
+          Price: <span id="priceValue">--</span> AZN
+        </p>
+
+        <p class="productDiscount" id="productDiscount">
+          Discount: <span id="discountValue">--</span>%
+        </p>
+
+        <p class="productStock" id="productStock">.</p>
+
+        <button class="buyButton" id="buyButton">Add to Basket</button>
+      </div>
+    </main>
+
+    <script src="js/index.js"></script>
+    <script src="./js/product-details.js"></script>
+  </body>
+</html>
