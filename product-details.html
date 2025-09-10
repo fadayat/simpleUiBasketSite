@@ -51,6 +51,8 @@
     </header>
 
     <main class="container productDetails" id="productDetails">
+      <div id="toast-notification"></div>
+
       <div class="productImage" id="productImage">
         <img
           class="productImageImg"
@@ -75,7 +77,9 @@
 
         <p class="productStock" id="productStock">.</p>
 
-        <button class="buyButton" id="buyButton">Add to Basket</button>
+        <button onclick="handleBtn(id)" class="buyButton" id="buyButton">
+          Add to Basket
+        </button>
       </div>
     </main>
 

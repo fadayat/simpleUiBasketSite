@@ -30,9 +30,11 @@ function showProductDetails(id) {
   console.log(p.inStock);
 
   if (!p.inStock) {
-    buyButton.classList.add("disableda");
+    buyButton.classList.add("disabled"); //islemedi ay muellim
+    buyButton.setAttribute("disabled", "true");
   } else {
-    buyButton.classList.remove("disableda");
+    buyButton.classList.remove("disabled");
+    buyButton.removeAttribute("disabled");
   }
 
   productName.textContent = p.productName;
