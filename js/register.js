@@ -78,7 +78,7 @@ function checkDetails(username, password, email) {
   // CHECK PASW AND GIVE MESG
   if (!checkPassword(password)) {
     showMessage(
-      "sifre 6dan cox simvol, bir kicik, bir boyuk herf ehate etmelidir ",
+      "Password must be more than 6 characters long, contain at least one lowercase, one uppercase letter.",
       "error",
       "password"
     );
