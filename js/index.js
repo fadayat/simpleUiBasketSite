@@ -285,7 +285,7 @@ async function fetchProducts() {
 
   showProducts(products);
 
-  buyBtnsEventListener();
+  // buyBtnsEventListener();
 }
 
 function showProducts(products) {
@@ -306,7 +306,7 @@ function showProducts(products) {
           </div>
         
           <div class="auth btns">
-            <button data-id=${product.productId} class="btn buyPrd  ${addBasketDisabled} ">Add to Basket</button>
+            <button onclick="handleBtn(${product.productId})" data-id=${product.productId} class="btn buyPrd  ${addBasketDisabled} ">Add to Basket</button>
           </div>
         </div>
     `;
@@ -314,55 +314,87 @@ function showProducts(products) {
   });
 }
 
-function buyBtnsEventListener() {
-  const buyBtns = document.querySelectorAll(".buyPrd");
+function handleBtn(id) {
+  const user = getUser();
+  if (!user) {
+    showMessage("please login to add product", "error");
+    return;
+  }
 
-  buyBtns.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const user = getUser();
+  const productId = id;
+  const productToAdd = products.find((p) => p.productId == productId);
 
-      if (!user) {
-        message("please login to add product", "error");
-        return;
-      }
-      const productId = Number(btn.dataset.id);
+  if (!productToAdd.inStock) {
+    showMessage("unfortunetly no stock", "error");
+    return;
+  }
 
-      const productToAdd = products.find((p) => p.productId == productId);
-      console.log(productToAdd);
-      if (!productToAdd.inStock) {
-        showMessage("unfortunetly no stock", "error");
-        return;
-      }
-      const existingItemInBasket = user.basket.find(
-        (basketItem) => basketItem.productId == productId
-      );
+  const existingItemInBasket = user.basket.find(
+    (basketItem) => basketItem.productId == productId
+  );
 
-      if (existingItemInBasket) {
-        existingItemInBasket.quantity++;
-      } else {
-        const newItemForBasket = {
-          ...productToAdd,
-          quantity: 1,
-        };
-        user.basket.push(newItemForBasket);
-      }
-      const message = "product added to basket";
-      showMessage(message);
+  if (existingItemInBasket) {
+    existingItemInBasket.quantity++;
+  } else {
+    const newItemForBasket = {
+      ...productToAdd,
+      quantity: 1,
+    };
+    user.basket.push(newItemForBasket);
+  }
 
-      saveUser(user);
-      checkBasket(user);
+  showMessage("Product added to basket");
 
-      updateBadge();
-    });
-  });
+  saveUser(user);
+  checkBasket(user);
 
-  addBtns.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      console.log("clicked add to basket:", btn.dataset.id);
-    });
-  });
+  updateBadge();
+
+  console.log("onlcik de isledi");
 }
+
+// function buyBtnsEventListener() {
+//   const buyBtns = document.querySelectorAll(".buyPrd");
+
+//   buyBtns.forEach((btn) => {
+//     btn.addEventListener("click", (e) => {
+//       e.stopPropagation();
+//       const user = getUser();
+
+//       if (!user) {
+//         showMessage("Please login to add product", "error");
+//         return;
+//       }
+//       const productId = Number(btn.dataset.id);
+
+//       const productToAdd = products.find((p) => p.productId == productId);
+//       if (!productToAdd.inStock) {
+//         showMessage("Unfortunately no stock", "error");
+//         return;
+//       }
+//       const existingItemInBasket = user.basket.find(
+//         (basketItem) => basketItem.productId == productId
+//       );
+
+//       if (existingItemInBasket) {
+//         existingItemInBasket.quantity++;
+//       } else {
+//         const newItemForBasket = {
+//           ...productToAdd,
+//           quantity: 1,
+//         };
+//         user.basket.push(newItemForBasket);
+//       }
+
+//       showMessage("Product added to basket");
+
+//       saveUser(user);
+//       checkBasket(user);
+
+//       updateBadge();
+//     });
+//   });
+// }
 
 function showMessage(message, type = "success") {
   const notification = document.getElementById("toast-notification");
