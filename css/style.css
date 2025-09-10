@@ -436,7 +436,8 @@ button[type="submit"]:hover {
 }
 
 .badget {
-  font-size: 12px;
+  color: var(--light-color);
+  font-size: 14px;
   padding: 0 4px;
   border-radius: 10px;
   background-color: var(--primary-color);

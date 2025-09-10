@@ -324,10 +324,10 @@ function handleBtn(id) {
   const productId = id;
   const productToAdd = products.find((p) => p.productId == productId);
 
-  if (!productToAdd.inStock) {
-    showMessage("unfortunetly no stock", "error");
-    return;
-  }
+  // if (!productToAdd.inStock) {
+  //   showMessage("unfortunetly no stock", "error");
+  //   return;
+  // }
 
   const existingItemInBasket = user.basket.find(
     (basketItem) => basketItem.productId == productId
@@ -349,54 +349,9 @@ function handleBtn(id) {
   checkBasket(user);
 
   updateBadge();
-
-  console.log("onlcik de isledi");
 }
 
-// function buyBtnsEventListener() {
-//   const buyBtns = document.querySelectorAll(".buyPrd");
-
-//   buyBtns.forEach((btn) => {
-//     btn.addEventListener("click", (e) => {
-//       e.stopPropagation();
-//       const user = getUser();
-
-//       if (!user) {
-//         showMessage("Please login to add product", "error");
-//         return;
-//       }
-//       const productId = Number(btn.dataset.id);
-
-//       const productToAdd = products.find((p) => p.productId == productId);
-//       if (!productToAdd.inStock) {
-//         showMessage("Unfortunately no stock", "error");
-//         return;
-//       }
-//       const existingItemInBasket = user.basket.find(
-//         (basketItem) => basketItem.productId == productId
-//       );
-
-//       if (existingItemInBasket) {
-//         existingItemInBasket.quantity++;
-//       } else {
-//         const newItemForBasket = {
-//           ...productToAdd,
-//           quantity: 1,
-//         };
-//         user.basket.push(newItemForBasket);
-//       }
-
-//       showMessage("Product added to basket");
-
-//       saveUser(user);
-//       checkBasket(user);
-
-//       updateBadge();
-//     });
-//   });
-// }
-
-function showMessage(message, type = "success") {
+function showMessage(message = "something happened", type = "success") {
   const notification = document.getElementById("toast-notification");
 
   notification.textContent = message;
