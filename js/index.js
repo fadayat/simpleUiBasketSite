@@ -1,7 +1,5 @@
 const login = document.getElementById("login");
 const logout = document.querySelector(".fa-right-from-bracket");
-// const buyBtn = document.querySelector(".buyPrd");
-// const addToBasketBtn = document.querySelector(".addToBasket");
 const userIcon = document.querySelector(".fa-user");
 const cartIcon = document.querySelector(".fa-cart-shopping");
 const userUl = document.querySelector(".userUl");
@@ -82,6 +80,7 @@ function logoutStyleFn() {
 function logoutClickFn() {
   localStorage.removeItem("loggedInUser");
   logoutAllStyle();
+  showMessage("successfully log out");
 }
 
 function logoutAllStyle() {
@@ -97,7 +96,6 @@ function logoutAllStyle() {
   userUl.innerHTML = "";
   basketUl.innerHTML = "";
   badge.style.display = "none";
-  showMessage("successfully log out");
 }
 
 function userInfoAddHover(user) {
@@ -285,6 +283,8 @@ async function fetchProducts() {
 
   showProducts(products);
 
+  localStorage.setItem("products", JSON.stringify(products));
+
   // buyBtnsEventListener();
 }
 
@@ -298,19 +298,19 @@ function showProducts(products) {
     const addBasketDisabled = product.inStock ? "" : "disabledForBadge";
     const card = document.createElement("div");
     card.innerHTML = `
-    <div class="card">
+    <div  class="card">
           <img src="./img/card.jpeg" alt="${shortDescription}" />
           <div class="card_content">
             <h3>${product.productName}</h3>
-            <p>${shortDescription}<a href='#' class='red'>read more</a></p>
+            <p onclick="handleCard(${product.productId})" >${shortDescription}<a href='#' class='red'>read more</a></p>
           </div>
         
           <div class="auth btns">
-            <button onclick="handleBtn(${product.productId})" data-id=${product.productId} class="btn buyPrd  ${addBasketDisabled} ">Add to Basket</button>
+            <button onclick="handleBtn(${product.productId})"  class="btn buyPrd  ${addBasketDisabled} ">Add to Basket</button>
           </div>
         </div>
     `;
-    cards.appendChild(card);
+    cards?.appendChild(card);
   });
 }
 
@@ -425,4 +425,8 @@ function updateBadge() {
   } else {
     badge.style.display = "none";
   }
+}
+
+function handleCard(id) {
+  window.location.href = `product-details.html?id=${id}`;
 }
