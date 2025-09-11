@@ -1,5 +1,11 @@
+// checkout.js
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Function to display order summary
   displayOrderSummary();
+  formatCardNumberInput();
+
+  //   validatePaymentInputs();
 });
 
 function displayOrderSummary() {
@@ -12,7 +18,7 @@ function displayOrderSummary() {
   // Get total price from localStorage
   let totalPrice = Number(localStorage.getItem("totalPrice"));
 
-  // Update the summary section
+  // Update the sub summary section
   summarySubtotal.textContent = totalPrice + " AZN";
 
   // Free shipping for orders over 100 AZN
@@ -27,6 +33,27 @@ function displayOrderSummary() {
     totalPrice = totalPrice + 20;
   }
 
-  //   Update total price
+  // Update total price
   summaryTotal.textContent = totalPrice + " AZN";
+}
+
+// function validatePaymentInputs() {}
+
+function formatCardNumberInput() {
+  const cardNumberInp = document.getElementById("card-number");
+
+  cardNumberInp.addEventListener("input", (e) => {
+    presentValue = e.target.value;
+
+    presentValueLenghts = presentValue.length;
+
+    if (
+      presentValueLenghts == 4 ||
+      presentValueLenghts == 9 ||
+      presentValueLenghts == 14
+    ) {
+      presentValue += " ";
+      e.target.value = presentValue;
+    }
+  });
 }
