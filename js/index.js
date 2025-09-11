@@ -394,16 +394,11 @@ function handleCard(id) {
 }
 
 function handleCheck() {
-  window.location.href = "checkout.html";
+  const totalPrice = localStorage.getItem("totalPrice");
 
-  validateCheckoutInputs();
-}
-
-function validateCheckoutInputs() {
-  nameInput = document.getElementById("card-number");
-  console.log(nameInput);
-}
-
-function handlePay() {
-  console.log("salam");
+  if (totalPrice > 0) {
+    window.location.href = "checkout.html";
+  } else {
+    showMessage("add product to continue checkout", "error");
+  }
 }
