@@ -472,3 +472,13 @@ button[type="submit"]:hover {
   border-radius: 4px;
   z-index: 5000;
 }
+
+.cvc {
+  margin-top: 20px;
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
