@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateBadge();
 });
 
-logout.addEventListener("click", () => {
+logout?.addEventListener("click", () => {
   logoutClickFn();
   basketUl.innerHTML = "";
 });
