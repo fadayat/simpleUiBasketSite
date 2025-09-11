@@ -198,7 +198,16 @@ function totalPriced(totalPrice, basketUl) {
   totalLi.classList.add("totalPrice");
   totalLi.textContent = `Total Price: ${totalPrice}$`;
 
+  const checkOutBtn = document.createElement("button");
+  checkOutBtn.classList.add("checkOutBtn");
+  checkOutBtn.textContent = "Check out";
+
+  localStorage.setItem("totalPrice", totalPrice);
+
+  checkOutBtn.setAttribute("onclick", "handleCheck()");
+
   basketUl.appendChild(totalLi);
+  basketUl.appendChild(checkOutBtn);
 }
 
 function addEventToQuantityButtons() {
@@ -317,20 +326,19 @@ function showProducts(products) {
 function handleBtn(id) {
   const user = getUser();
   if (!user) {
-    showMessage("please login to add product", "error");
+    showMessage("Please login to add the product", "error");
     return;
   }
 
-  const productId = id;
-  const productToAdd = products.find((p) => p.productId == productId);
+  const productToAdd = products.find((p) => p.productId == id);
 
-  // if (!productToAdd.inStock) {
-  //   showMessage("unfortunetly no stock", "error");
-  //   return;
-  // }
+  if (!productToAdd.inStock) {
+    showMessage("Unfortunately, the product is out of stock", "error");
+    return;
+  }
 
   const existingItemInBasket = user.basket.find(
-    (basketItem) => basketItem.productId == productId
+    (basketItem) => basketItem.productId == id
   );
 
   if (existingItemInBasket) {
@@ -344,10 +352,8 @@ function handleBtn(id) {
   }
 
   showMessage("Product added to basket");
-
   saveUser(user);
   checkBasket(user);
-
   updateBadge();
 }
 
@@ -384,4 +390,8 @@ function updateBadge() {
 
 function handleCard(id) {
   window.location.href = `product-details.html?id=${id}`;
+}
+
+function handleCheck() {
+  window.location.href = "checkout.html";
 }
