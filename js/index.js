@@ -395,15 +395,4 @@ function handleCard(id) {
 
 function handleCheck() {
   window.location.href = "checkout.html";
-
-  validateCheckoutInputs();
-}
-
-function validateCheckoutInputs() {
-  nameInput = document.getElementById("card-number");
-  console.log(nameInput);
-}
-
-function handlePay() {
-  console.log("salam");
 }
