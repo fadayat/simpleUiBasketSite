@@ -366,7 +366,8 @@ button[type="submit"]:hover {
   font-weight: 500;
 }
 
-.totalPrice {
+.totalPrice,
+.checkOutBtn {
   position: sticky;
   bottom: 0;
   background-color: var(--light-color);
@@ -374,7 +375,7 @@ button[type="submit"]:hover {
   border-top: 2px solid var(--border-color);
   font-weight: bold;
   text-align: right;
-  border-radius: 0 0 8px 8px;
+  border-radius: 8px;
 }
 
 .empty {

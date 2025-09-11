@@ -198,7 +198,16 @@ function totalPriced(totalPrice, basketUl) {
   totalLi.classList.add("totalPrice");
   totalLi.textContent = `Total Price: ${totalPrice}$`;
 
+  const checkOutBtn = document.createElement("button");
+  checkOutBtn.classList.add("checkOutBtn");
+  checkOutBtn.textContent = "Check out";
+
+  localStorage.setItem("totalPrice", totalPrice);
+
+  checkOutBtn.setAttribute("onclick", "handleCheck()");
+
   basketUl.appendChild(totalLi);
+  basketUl.appendChild(checkOutBtn);
 }
 
 function addEventToQuantityButtons() {
@@ -321,8 +330,6 @@ function handleBtn(id) {
     return;
   }
 
-  
-
   const productToAdd = products.find((p) => p.productId == id);
 
   if (!productToAdd.inStock) {
@@ -383,4 +390,8 @@ function updateBadge() {
 
 function handleCard(id) {
   window.location.href = `product-details.html?id=${id}`;
+}
+
+function handleCheck() {
+  window.location.href = "checkout.html";
 }
