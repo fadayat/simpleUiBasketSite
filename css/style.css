@@ -476,3 +476,9 @@ button[type="submit"]:hover {
 .cvc {
   margin-top: 20px;
 }
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

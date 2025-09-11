@@ -16,7 +16,8 @@
         <div class="input-piece">
           <label for="card-number">Card Number</label>
           <input
-            type="text"
+            class="no-spinner"
+            type="number"
             id="card-number"
             placeholder="0000 0000 0000 0000"
             required
@@ -26,15 +27,27 @@
         <div class="input-piece form-row">
           <div class="form-group date">
             <label for="expiry-date">Expiry Date</label>
-            <input type="text" id="expiry-date" placeholder="MM/YY" required />
+            <input
+              class="no-spinner"
+              type="number"
+              id="expiry-date"
+              placeholder="MM/YY"
+              required
+            />
           </div>
           <div class="form-group cvc">
             <label for="cvc">CVC</label>
-            <input type="text" id="cvc" placeholder="123" required />
+            <input
+              class="no-spinner"
+              type="number"
+              id="cvc"
+              placeholder="123"
+              required
+            />
           </div>
         </div>
 
-        <button type="submit">Pay Now</button>
+        <button onclick="handlePay()" type="submit">Pay Now</button>
       </form>
     </div>
     <div id="toast-notification"></div>
