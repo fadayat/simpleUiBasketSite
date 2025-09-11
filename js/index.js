@@ -321,11 +321,9 @@ function handleBtn(id) {
     return;
   }
 
+  
+
   const productToAdd = products.find((p) => p.productId == id);
-  // if (!productToAdd) {
-  //   console.error(`Product not found: id=${id}`);
-  //   return;
-  // }
 
   if (!productToAdd.inStock) {
     showMessage("Unfortunately, the product is out of stock", "error");
