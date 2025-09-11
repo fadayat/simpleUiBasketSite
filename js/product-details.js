@@ -42,4 +42,8 @@ function showProductDetails(id) {
   productPriceValue.textContent = p.price;
   productDiscountValue.textContent = p.discount;
   productStock.textContent = inStock;
+
+  buyButton.addEventListener("click", () => {
+    handleBtn(p.productId);
+  });
 }

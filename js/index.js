@@ -317,20 +317,23 @@ function showProducts(products) {
 function handleBtn(id) {
   const user = getUser();
   if (!user) {
-    showMessage("please login to add product", "error");
+    showMessage("Please login to add the product", "error");
     return;
   }
 
-  const productId = id;
-  const productToAdd = products.find((p) => p.productId == productId);
-
-  // if (!productToAdd.inStock) {
-  //   showMessage("unfortunetly no stock", "error");
+  const productToAdd = products.find((p) => p.productId == id);
+  // if (!productToAdd) {
+  //   console.error(`Product not found: id=${id}`);
   //   return;
   // }
 
+  if (!productToAdd.inStock) {
+    showMessage("Unfortunately, the product is out of stock", "error");
+    return;
+  }
+
   const existingItemInBasket = user.basket.find(
-    (basketItem) => basketItem.productId == productId
+    (basketItem) => basketItem.productId == id
   );
 
   if (existingItemInBasket) {
@@ -344,10 +347,8 @@ function handleBtn(id) {
   }
 
   showMessage("Product added to basket");
-
   saveUser(user);
   checkBasket(user);
-
   updateBadge();
 }
 
