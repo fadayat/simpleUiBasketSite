@@ -394,5 +394,11 @@ function handleCard(id) {
 }
 
 function handleCheck() {
-  window.location.href = "checkout.html";
+  const totalPrice = localStorage.getItem("totalPrice");
+
+  if (totalPrice > 0) {
+    window.location.href = "checkout.html";
+  } else {
+    showMessage("add product to continue checkout", "error");
+  }
 }

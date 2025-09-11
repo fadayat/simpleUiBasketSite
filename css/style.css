@@ -552,3 +552,11 @@ button[type="submit"]:hover {
   font-size: 20px;
   margin-top: 10px;
 }
+
+.shipping-message {
+  font-size: 0.85rem;
+  color: #28a745;
+  text-align: right;
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
