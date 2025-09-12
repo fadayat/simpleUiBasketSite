@@ -33,22 +33,6 @@ logout?.addEventListener("click", () => {
   basketUl.innerHTML = "";
 });
 
-function getUser() {
-  const userHas = localStorage.getItem("loggedInUser");
-
-  if (!userHas) {
-    return false;
-  }
-
-  try {
-    const user = JSON.parse(userHas);
-    return user;
-  } catch (e) {
-    console.error("JSON parse error in getUser:", e);
-    return false;
-  }
-}
-
 function loginLogout(hasUser) {
   if (hasUser) {
     loginStyleFn();
@@ -81,7 +65,7 @@ function logoutStyleFn() {
 function logoutClickFn() {
   localStorage.removeItem("loggedInUser");
   logoutAllStyle();
-  showMessage("successfully log out");
+  showMessageToast("successfully log out");
 }
 
 function logoutAllStyle() {
@@ -240,23 +224,6 @@ function handlePlusClick(btnId) {
   updateQuantity(btnId, "plus");
 }
 
-function saveUser(user) {
-  if (!user) return;
-
-  try {
-    localStorage.setItem("loggedInUser", JSON.stringify(user));
-
-    let users = localStorage.getItem("users");
-    users = users ? JSON.parse(users) : [];
-
-    users = users.map((u) => (u.id === user.id ? user : u));
-
-    localStorage.setItem("users", JSON.stringify(users));
-  } catch (e) {
-    console.error("saveUser error:", e);
-  }
-}
-
 function updateQuantity(productId, type) {
   const user = getUser();
   if (!user || !user.basket) return;
@@ -269,7 +236,7 @@ function updateQuantity(productId, type) {
 
     if (product.quantity === 0) {
       user.basket = user.basket.filter((item) => item.productId !== productId);
-      showMessage("product removed from basket");
+      showMessageToast("product removed from basket");
     }
   } else if (type === "plus") {
     product.quantity++;
@@ -327,14 +294,14 @@ function showProducts(products) {
 function handleBtn(id) {
   const user = getUser();
   if (!user) {
-    showMessage("Please login to add the product", "error");
+    showMessageToast("Please login to add the product", "error");
     return;
   }
 
   const productToAdd = products.find((p) => p.productId == id);
 
   if (!productToAdd.inStock) {
-    showMessage("Unfortunately, the product is out of stock", "error");
+    showMessageToast("Unfortunately, the product is out of stock", "error");
     return;
   }
 
@@ -352,22 +319,10 @@ function handleBtn(id) {
     user.basket.push(newItemForBasket);
   }
 
-  showMessage("Product added to basket");
+  showMessageToast("Product added to basket");
   saveUser(user);
   checkBasket(user);
   updateBadge();
-}
-
-function showMessage(message = "something happened", type = "success") {
-  const notification = document.getElementById("toast-notification");
-
-  notification.textContent = message;
-  notification.className = "";
-
-  notification.classList.add(type);
-  notification.classList.add("show");
-
-  setTimeout(() => notification.classList.remove("show"), 1000);
 }
 
 function updateBadge() {
@@ -399,6 +354,6 @@ function handleCheck() {
   if (totalPrice > 0) {
     window.location.href = "checkout.html";
   } else {
-    showMessage("add product to continue checkout", "error");
+    showMessageToast("add product to continue checkout", "error");
   }
 }
