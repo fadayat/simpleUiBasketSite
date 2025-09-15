@@ -123,3 +123,71 @@ function isOnlyNumber(value, message, type, place) {
 
   return isNumbers;
 }
+
+function handlePay(e) {
+  e.preventDefault();
+  console.log(validateInputs());
+}
+
+function validateInputs() {
+  let validate = true;
+
+  validate = cardNumberValidate();
+
+  validate = expiryDateValidate();
+
+  validate = cvcValidate();
+
+  return validate;
+}
+
+function cardNumberValidate() {
+  const cardNumberInput = document.getElementById("card-number").value;
+
+  if (!cardNumberInput.trim()) {
+    showMessageValidate(
+      "please fill card number input",
+      "error",
+      "card-number"
+    );
+    validate = false;
+  } else if (cardNumberInput.trim().length !== 19) {
+    showMessageValidate(
+      "please write card number with 16 number ",
+      "error",
+      "card-number"
+    );
+    validate = false;
+  }
+  return validate;
+}
+
+function expiryDateValidate() {
+  const expiryDateInput = document.getElementById("expiry-date").value;
+
+  if (!expiryDateInput.trim()) {
+    showMessageValidate(
+      "please fill expiry date input",
+      "error",
+      "expiry-date"
+    );
+    validate = false;
+  } else if (expiryDateInput.trim().length !== 5) {
+    showMessageValidate("please fill this input full", "error", "expiry-date");
+    validate = false;
+  }
+  return validate;
+}
+
+function cvcValidate() {
+  const cvcInput = document.getElementById("cvc").value;
+
+  if (!cvcInput.trim()) {
+    showMessageValidate("please fill cvc input", "error", "cvc");
+    validate = false;
+  } else if (cvcInput.trim().length !== 3) {
+    showMessageValidate("please fill cvc input full", "error", "cvc");
+    validate = false;
+  }
+  return validate;
+}

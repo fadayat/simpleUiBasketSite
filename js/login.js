@@ -87,5 +87,3 @@ function validateInputs() {
     return true;
   }
 }
-
-// SHOW MSGS FN
