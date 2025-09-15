@@ -3,6 +3,22 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Function to display order summary
   displayOrderSummary();
+  main.innerHTML = `
+    <div class="form-container">
+        <form onsubmit="handleVerificationSubmit(event)">
+            <h2>Verification Code</h2>
+            <p>Enter the verification code sent by your bank to complete the payment.</p>
+            <div class="input-piece">
+                <label for="verification-code">Otp Code</label>
+                <input inputmode="numeric" maxlength="4" type="text" id="verification-code" oninput="formatVerificationInp(event)" placeholder="Enter the Code" />
+            </div>
+            <button type="submit">
+                <span>Verify the payment</span>
+                <span id="submit-spinner" class="spinner"></span>
+            </button>
+        </form>
+        <div id="toast-notification"></div>
+    </div>`;
 
   //   validatePaymentInputs();
 });
@@ -133,6 +149,10 @@ function isOnlyNumber(value, message, type, place) {
       isNumbers = /^\d+$/.test(value);
       break;
 
+    case "verification-code":
+      isNumbers = /^\d+$/.test(value);
+      break;
+
     default:
       isNumbers = false;
       break;
@@ -150,13 +170,29 @@ function isOnlyNumber(value, message, type, place) {
   return isNumbers;
 }
 
-function handlePay(e) {
+async function handlePay(e) {
   e.preventDefault();
   const isValid = validateInputs();
 
+  const spinner = document.getElementById("submit-spinner");
+  const btn = document.getElementById("submit-btn");
+
+  spinner.style.display = "inline-block";
+  btn.disabled = true;
+
   if (isValid) {
-    console.log("odenise kece bilerik");
+    try {
+      console.log("card yoxlanilir");
+
+      const data = await fetchAllCards();
+      checkCard(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
+
+  spinner.style.display = "none";
+  btn.disabled = false;
 }
 
 function validateInputs() {
@@ -170,16 +206,16 @@ function validateInputs() {
 }
 
 function cardNumberValidate() {
-  const cardNumberInput = document.getElementById("card-number").value;
+  const value = getElByIdValue("card-number");
 
-  if (!cardNumberInput.trim()) {
+  if (!value.trim()) {
     showMessageValidate(
       "please fill card number input",
       "error",
       "card-number"
     );
     return false;
-  } else if (cardNumberInput.trim().length !== 19) {
+  } else if (value.trim().length !== 19) {
     showMessageValidate(
       "please write card number with 16 number ",
       "error",
@@ -191,16 +227,16 @@ function cardNumberValidate() {
 }
 
 function expiryDateValidate() {
-  const expiryDateInput = document.getElementById("expiry-date").value;
+  const value = getElByIdValue("expiry-date");
 
-  if (!expiryDateInput.trim()) {
+  if (!value.trim()) {
     showMessageValidate(
       "please fill expiry date input",
       "error",
       "expiry-date"
     );
     return false;
-  } else if (expiryDateInput.trim().length !== 5) {
+  } else if (value.trim().length !== 5) {
     showMessageValidate("please fill this input full", "error", "expiry-date");
     return false;
   }
@@ -208,14 +244,99 @@ function expiryDateValidate() {
 }
 
 function cvcValidate() {
-  const cvcInput = document.getElementById("cvc").value;
+  const value = getElByIdValue("cvc");
 
-  if (!cvcInput.trim()) {
+  if (!value.trim()) {
     showMessageValidate("please fill cvc input", "error", "cvc");
     return false;
-  } else if (cvcInput.trim().length !== 3) {
+  } else if (value.trim().length !== 3) {
     showMessageValidate("please fill cvc input full", "error", "cvc");
     return false;
   }
   return true;
+}
+
+async function fetchAllCards() {
+  const res = await fetch(
+    "https://68be722b227c48698f86d903.mockapi.io/api/products/cards"
+  );
+
+  const data = await res.json();
+
+  return data;
+}
+
+function checkCard(cards) {
+  const number = Number(
+    getElByIdValue("card-number").trim().replace(/\s/g, "")
+  );
+  const dateFull = getElByIdValue("expiry-date");
+  const cvc = Number(getElByIdValue("cvc"));
+
+  let card = cards.find((card) => number == card.cardNumber);
+
+  if (!card) {
+    showMessageValidate("card number is invalid", "error", "card-number");
+    return;
+  }
+
+  if (dateFull) {
+    let [month, year] = dateFull.split("/");
+    month = Number(month);
+    year = Number(year);
+    console.log(month, year);
+
+    if (month !== card.expiryMonth) {
+      showMessageValidate("month is invalid", "error", "expiry-date");
+      return;
+    }
+
+    if (year !== card.expiryYear) {
+      showMessageValidate("card  year is invalid", "error", "expiry-date");
+      return;
+    }
+  }
+
+  if (cvc !== card.cvc) {
+    showMessageValidate("cvc is invalid", "error", "cvc");
+    return;
+  }
+
+  main = document.getElementById("main");
+  // main.innerHTML = "";
+}
+
+function handleVerificationSubmit(e) {
+  e.preventDefault();
+
+  code = getElByIdValue("verification-code");
+
+  if (code.length != 4) {
+    showMessageValidate(
+      "code  must be  4 charackter",
+      "error",
+      "verification-code"
+    );
+    return;
+  } else {
+    hideMessageValidate("verification-code");
+  }
+
+  console.log("4 reqemdir");
+}
+
+function formatVerificationInp(e) {
+  let value = e.target.value;
+
+  if (value != "")
+    isOnlyNumber(
+      value,
+      "Only numbers are allowed",
+      "error",
+      "verification-code"
+    );
+
+  let cleanedValue = value.replace(/\D/g, "");
+
+  e.target.value = cleanedValue;
 }

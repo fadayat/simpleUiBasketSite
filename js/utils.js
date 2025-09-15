@@ -73,4 +73,6 @@ function hideMessageValidate(place) {
   }
 }
 
-function isOnlyNumber() {}
+function getElByIdValue(id) {
+  return document.getElementById(id).value;
+}
