@@ -63,7 +63,17 @@ let lastValidValue = "";
 function formatCardDateInput(e) {
   let value = e.target.value;
 
-  isOnlyNumber(value, "Only numbers are allowed", "error", "expiry-date");
+  const isValid = isOnlyNumber(
+    value,
+    "Only numbers are allowed",
+    "error",
+    "expiry-date"
+  );
+
+  if (!isValid) {
+    e.target.value = lastValidValue;
+    return;
+  }
 
   let cleanedValue = value.replace(/[^\d/]/g, "");
 
