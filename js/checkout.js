@@ -3,7 +3,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Function to display order summary
   displayOrderSummary();
-  formatCardNumberInput();
 
   //   validatePaymentInputs();
 });
@@ -37,23 +36,90 @@ function displayOrderSummary() {
   summaryTotal.textContent = totalPrice + " AZN";
 }
 
-// function validatePaymentInputs() {}
+// Validate payment inputs
 
-function formatCardNumberInput() {
-  const cardNumberInp = document.getElementById("card-number");
+// format card number input
+function FormatCardNumberInput(e) {
+  let value = e.target.value;
 
-  cardNumberInp.addEventListener("input", (e) => {
-    presentValue = e.target.value;
+  isOnlyNumber(value, "Only numbers are allowed", "error", "card-number");
 
-    presentValueLenghts = presentValue.length;
+  let cleanedValue = value.replace(/[^\d\s]/g, "");
 
-    if (
-      presentValueLenghts == 4 ||
-      presentValueLenghts == 9 ||
-      presentValueLenghts == 14
-    ) {
-      presentValue += " ";
-      e.target.value = presentValue;
+  e.target.value = cleanedValue;
+
+  let presentValue = cleanedValue;
+
+  length = presentValue.length;
+
+  if (length == 4 || length == 9 || length == 14) {
+    presentValue += " ";
+    e.target.value = presentValue;
+  }
+}
+
+function formatCardDateInput(e) {
+  let value = e.target.value;
+
+  isOnlyNumber(value, "Only numbers are allowed", "error", "expiry-date");
+
+  let cleanedValue = value.replace(/[^\d/]/g, "");
+
+  e.target.value = cleanedValue;
+
+  let presentValue = cleanedValue;
+
+  length = presentValue.length;
+
+  if (length == 2) {
+    presentValue += "/";
+    e.target.value = presentValue;
+  }
+}
+
+function formatCvcInput(e) {
+  let value = e.target.value;
+
+  isOnlyNumber(value, "Only numbers are allowed", "error", "cvc");
+
+  let cleanedValue = value.replace(/[^\d]/g, "");
+
+  e.target.value = cleanedValue;
+
+  let presentValue = cleanedValue;
+
+  length = presentValue.length;
+}
+
+function isOnlyNumber(value, message, type, place) {
+  let isNumbers;
+
+  switch (place) {
+    case "card-number":
+      isNumbers = /^[\d\s]+$/.test(value);
+      break;
+
+    case "expiry-date":
+      isNumbers = /^[\d\s\/]+$/.test(value);
+      break;
+
+    case "cvc":
+      isNumbers = /^\d+$/.test(value);
+      break;
+
+    default:
+      isNumbers = false;
+      break;
+  }
+
+  if (value !== " ") {
+    if (!isNumbers) {
+      showMessageValidate(message, type, place);
+      return;
+    } else if (isNumbers) {
+      hideMessageValidate(place);
     }
-  });
+  }
+
+  return isNumbers;
 }

@@ -52,11 +52,11 @@ function handleLogin(e) {
 
   // USER NOT FOUND
   if (!user) {
-    showMessage("User not found", "error", "password");
+    showMessageValidate("User not found", "error", "password");
     return;
   } else {
     if (user.password !== passwordInp.value) {
-      showMessage("Wrong password", "error", "password");
+      showMessageValidate("Wrong password", "error", "password");
       return;
     }
 
@@ -64,7 +64,7 @@ function handleLogin(e) {
 
     // succesfull login
     localStorage.setItem("loggedInUser", JSON.stringify(user));
-    showMessage("Login successful!", "success", "password");
+    showMessageValidate("Login successful!", "success", "password");
     window.location.href = "index.html";
   }
 }
@@ -76,11 +76,11 @@ function validateInputs() {
 
   if (!usernameInp.value || !passwordInp.value) {
     if (!usernameInp.value) {
-      showMessage("Please enter your username.", "error", "username");
+      showMessageValidate("Please enter your username.", "error", "username");
     }
 
     if (!passwordInp.value) {
-      showMessage("Please enter your password.", "error", "password");
+      showMessageValidate("Please enter your password.", "error", "password");
     }
     return false;
   } else {
@@ -89,17 +89,3 @@ function validateInputs() {
 }
 
 // SHOW MSGS FN
-function showMessage(message, type, place) {
-  const input = document.getElementById(place);
-
-  const next = input.nextElementSibling;
-  if (next && next.classList.contains("validation-msg")) {
-    next.remove();
-  }
-
-  const msgDiv = document.createElement("span");
-  msgDiv.className = `validation-msg message ${type}`;
-  msgDiv.textContent = message;
-
-  input.after(msgDiv);
-}

@@ -17,6 +17,7 @@
           <div class="input-piece">
             <label for="card-number">Card Number</label>
             <input
+              oninput="FormatCardNumberInput(event)"
               maxlength="19"
               class="no-spinner"
               type="text"
@@ -29,9 +30,13 @@
           <div class="input-piece form-row">
             <div class="form-group date">
               <label for="expiry-date">Expiry Date</label>
+              <br />
               <input
+                style="width: 100%"
+                oninput="formatCardDateInput(event)"
+                maxlength="5"
                 class="no-spinner"
-                type="number"
+                type="text"
                 id="expiry-date"
                 placeholder="MM/YY"
                 required
@@ -39,9 +44,13 @@
             </div>
             <div class="form-group cvc">
               <label for="cvc">CVC</label>
+              <br />
               <input
+                style="width: 100%"
+                oninput="formatCvcInput(event)"
+                maxlength="3"
                 class="no-spinner"
-                type="number"
+                type="text"
                 id="cvc"
                 placeholder="123"
                 required
@@ -76,7 +85,7 @@
       </div>
       <div id="toast-notification"></div>
     </main>
-    <script src="js/index.js"></script>
-    <script src="js/checkout.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/checkout.js"></script>
   </body>
 </html>
