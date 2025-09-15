@@ -17,13 +17,13 @@
           <div class="input-piece">
             <label for="card-number">Card Number</label>
             <input
+              autofocus
               oninput="FormatCardNumberInput(event)"
               maxlength="19"
               class="no-spinner"
               type="text"
               id="card-number"
               placeholder="0000 0000 0000 0000"
-              required
             />
           </div>
 
@@ -39,7 +39,6 @@
                 type="text"
                 id="expiry-date"
                 placeholder="MM/YY"
-                required
               />
             </div>
             <div class="form-group cvc">
@@ -53,7 +52,6 @@
                 type="text"
                 id="cvc"
                 placeholder="123"
-                required
               />
             </div>
           </div>

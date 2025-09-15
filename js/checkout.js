@@ -58,12 +58,28 @@ function FormatCardNumberInput(e) {
   }
 }
 
+let lastValidValue = "";
+
 function formatCardDateInput(e) {
   let value = e.target.value;
 
   isOnlyNumber(value, "Only numbers are allowed", "error", "expiry-date");
 
   let cleanedValue = value.replace(/[^\d/]/g, "");
+
+  let digits = Number(cleanedValue.slice(0, 2));
+
+  if (digits < 0 || digits > 12) {
+    showMessageValidate(
+      "password month must be till 12",
+      "error",
+      "expiry-date"
+    );
+    e.target.value = lastValidValue;
+    return;
+  } else {
+    hideMessageValidate("expiry-date");
+  }
 
   e.target.value = cleanedValue;
 
@@ -126,19 +142,21 @@ function isOnlyNumber(value, message, type, place) {
 
 function handlePay(e) {
   e.preventDefault();
-  console.log(validateInputs());
+  const isValid = validateInputs();
+
+  if (isValid) {
+    console.log("odenise kece bilerik");
+  }
 }
 
 function validateInputs() {
-  let validate = true;
+  const isCardValid = cardNumberValidate();
 
-  validate = cardNumberValidate();
+  const isDateValid = expiryDateValidate();
 
-  validate = expiryDateValidate();
+  const isCvcValid = cvcValidate();
 
-  validate = cvcValidate();
-
-  return validate;
+  return isCardValid && isDateValid && isCvcValid;
 }
 
 function cardNumberValidate() {
@@ -150,16 +168,16 @@ function cardNumberValidate() {
       "error",
       "card-number"
     );
-    validate = false;
+    return false;
   } else if (cardNumberInput.trim().length !== 19) {
     showMessageValidate(
       "please write card number with 16 number ",
       "error",
       "card-number"
     );
-    validate = false;
+    return false;
   }
-  return validate;
+  return true;
 }
 
 function expiryDateValidate() {
@@ -171,12 +189,12 @@ function expiryDateValidate() {
       "error",
       "expiry-date"
     );
-    validate = false;
+    return false;
   } else if (expiryDateInput.trim().length !== 5) {
     showMessageValidate("please fill this input full", "error", "expiry-date");
-    validate = false;
+    return false;
   }
-  return validate;
+  return true;
 }
 
 function cvcValidate() {
@@ -184,10 +202,10 @@ function cvcValidate() {
 
   if (!cvcInput.trim()) {
     showMessageValidate("please fill cvc input", "error", "cvc");
-    validate = false;
+    return false;
   } else if (cvcInput.trim().length !== 3) {
     showMessageValidate("please fill cvc input full", "error", "cvc");
-    validate = false;
+    return false;
   }
-  return validate;
+  return true;
 }
