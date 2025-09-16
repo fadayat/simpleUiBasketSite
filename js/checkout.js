@@ -3,22 +3,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Function to display order summary
   displayOrderSummary();
-  main.innerHTML = `
-    <div class="form-container">
-        <form onsubmit="handleVerificationSubmit(event)">
-            <h2>Verification Code</h2>
-            <p>Enter the verification code sent by your bank to complete the payment.</p>
-            <div class="input-piece">
-                <label for="verification-code">Otp Code</label>
-                <input inputmode="numeric" maxlength="4" type="text" id="verification-code" oninput="formatVerificationInp(event)" placeholder="Enter the Code" />
-            </div>
-            <button type="submit">
-                <span>Verify the payment</span>
-                <span id="submit-spinner" class="spinner"></span>
-            </button>
-        </form>
-        <div id="toast-notification"></div>
-    </div>`;
 
   //   validatePaymentInputs();
 });
@@ -284,7 +268,6 @@ function checkCard(cards) {
     let [month, year] = dateFull.split("/");
     month = Number(month);
     year = Number(year);
-    console.log(month, year);
 
     if (month !== card.expiryMonth) {
       showMessageValidate("month is invalid", "error", "expiry-date");
@@ -302,11 +285,13 @@ function checkCard(cards) {
     return;
   }
 
-  main = document.getElementById("main");
-  // main.innerHTML = "";
+  localStorage.setItem("nowPayCardId", card.id);
+
+  otpCodeContainer();
 }
 
-function handleVerificationSubmit(e) {
+let triesCount = 2;
+async function handleVerificationSubmit(e) {
   e.preventDefault();
 
   code = getElByIdValue("verification-code");
@@ -322,7 +307,88 @@ function handleVerificationSubmit(e) {
     hideMessageValidate("verification-code");
   }
 
-  console.log("4 reqemdir");
+  const id = localStorage.getItem("nowPayCardId");
+
+  const res = await fetch(
+    `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${id}`
+  );
+
+  const card = await res.json();
+
+  if (Number(code) !== card.code) {
+    if (triesCount == 0) {
+      showMessageValidate(
+        `card is blocked, you are redirecting to main page`,
+        "error",
+        "verification-code"
+      );
+      setTimeout(() => {
+        window.location.href = "index.html";
+        return;
+      }, 2000);
+    } else {
+      showMessageValidate(
+        `code is wrong, try again you have ${triesCount} try`,
+        "error",
+        "verification-code"
+      );
+      triesCount--;
+      return;
+    }
+  } else {
+    const totalPrice = Number(localStorage.getItem("totalPrice"));
+    console.log(totalPrice);
+    console.log(card.balance);
+
+    if (Number(totalPrice) > Number(card.balance)) {
+      showMessageValidate(
+        `balance is not enought your balance: ${card.balance}`,
+        "error",
+        "verification-code"
+      );
+      return;
+    }
+
+    const updatedBalance = card.balance - totalPrice;
+
+    const fullCardData = {
+      ...card,
+      balance: updatedBalance,
+    };
+
+    fetch(
+      `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${card.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(fullCardData),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          showMessageValidate(
+            `code is true thanks for your order`,
+            "success",
+            "verification-code"
+          );
+        } else {
+          showMessageValidate(
+            `Failed to update card balance`,
+            "error",
+            "verification-code"
+          );
+        }
+      })
+      .catch((error) => {
+        showMessageValidate(
+          ` error, please try again error: ${error}`,
+          "error",
+          "verification-code"
+        );
+      });
+  }
 }
 
 function formatVerificationInp(e) {
@@ -339,4 +405,26 @@ function formatVerificationInp(e) {
   let cleanedValue = value.replace(/\D/g, "");
 
   e.target.value = cleanedValue;
+}
+
+function otpCodeContainer() {
+  main = document.getElementById("main");
+  main.innerHTML = "";
+
+  main.innerHTML = `
+    <div class="form-container">
+        <form onsubmit="handleVerificationSubmit(event)">
+            <h2>Verification Code</h2>
+            <p>Enter the verification code sent by your bank to complete the payment.</p>
+            <div class="input-piece">
+                <label for="verification-code">Otp Code</label>
+                <input inputmode="numeric" maxlength="4" type="text"  id="verification-code" oninput="formatVerificationInp(event)" placeholder="Enter the Code" />
+            </div>
+            <button type="submit">
+                <span>Verify the payment</span>
+                <span id="submit-spinner" class="spinner"></span>
+            </button>
+        </form>
+        <div id="toast-notification"></div>
+    </div>`;
 }
