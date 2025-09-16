@@ -296,24 +296,12 @@ async function handleVerificationSubmit(e) {
 
   code = getElByIdValue("verification-code");
 
-  if (code.length != 4) {
-    showMessageValidate(
-      "code  must be  4 charackter",
-      "error",
-      "verification-code"
-    );
+  const letterCount = checkLetterCount(code);
+  if (!letterCount) {
     return;
-  } else {
-    hideMessageValidate("verification-code");
   }
 
-  const id = localStorage.getItem("nowPayCardId");
-
-  const res = await fetch(
-    `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${id}`
-  );
-
-  const card = await res.json();
+  const card = await getCard();
 
   if (Number(code) !== card.code) {
     if (triesCount == 0) {
@@ -324,7 +312,7 @@ async function handleVerificationSubmit(e) {
       );
       setTimeout(() => {
         window.location.href = "index.html";
-        return;
+        return false;
       }, 2000);
     } else {
       showMessageValidate(
@@ -333,12 +321,10 @@ async function handleVerificationSubmit(e) {
         "verification-code"
       );
       triesCount--;
-      return;
+      return false;
     }
   } else {
     const totalPrice = Number(localStorage.getItem("totalPrice"));
-    console.log(totalPrice);
-    console.log(card.balance);
 
     if (Number(totalPrice) > Number(card.balance)) {
       showMessageValidate(
@@ -346,7 +332,7 @@ async function handleVerificationSubmit(e) {
         "error",
         "verification-code"
       );
-      return;
+      return false;
     }
 
     const updatedBalance = card.balance - totalPrice;
@@ -356,39 +342,67 @@ async function handleVerificationSubmit(e) {
       balance: updatedBalance,
     };
 
-    fetch(
-      `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${card.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(fullCardData),
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          showMessageValidate(
-            `code is true thanks for your order`,
-            "success",
-            "verification-code"
-          );
-        } else {
-          showMessageValidate(
-            `Failed to update card balance`,
-            "error",
-            "verification-code"
-          );
-        }
-      })
-      .catch((error) => {
+    CompleteOrderUpdateBalance(card, fullCardData);
+  }
+}
+
+function CompleteOrderUpdateBalance(card, fullCardData) {
+  fetch(
+    `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${card.id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(fullCardData),
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
         showMessageValidate(
-          ` error, please try again error: ${error}`,
+          `code is true thanks for your order`,
+          "success",
+          "verification-code"
+        );
+      } else {
+        showMessageValidate(
+          `Failed to complete order`,
           "error",
           "verification-code"
         );
-      });
+      }
+    })
+    .catch((error) => {
+      showMessageValidate(
+        `error, please try again, error: ${error}`,
+        "error",
+        "verification-code"
+      );
+    });
+}
+
+function checkLetterCount(code) {
+  if (code.length != 4) {
+    showMessageValidate(
+      "code  must be  4 charackter",
+      "error",
+      "verification-code"
+    );
+    return false;
+  } else {
+    hideMessageValidate("verification-code");
+    return true;
   }
+}
+async function getCard() {
+  const id = localStorage.getItem("nowPayCardId");
+
+  const res = await fetch(
+    `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${id}`
+  );
+
+  const card = await res.json();
+  return card;
 }
 
 function formatVerificationInp(e) {
@@ -420,7 +434,7 @@ function otpCodeContainer() {
                 <label for="verification-code">Otp Code</label>
                 <input inputmode="numeric" maxlength="4" type="text"  id="verification-code" oninput="formatVerificationInp(event)" placeholder="Enter the Code" />
             </div>
-            <button type="submit">
+            <button id='smtButton' type="submit">
                 <span>Verify the payment</span>
                 <span id="submit-spinner" class="spinner"></span>
             </button>
