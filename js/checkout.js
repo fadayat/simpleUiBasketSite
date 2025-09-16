@@ -303,47 +303,7 @@ async function handleVerificationSubmit(e) {
 
   const card = await getCard();
 
-  if (Number(code) !== card.code) {
-    if (triesCount == 0) {
-      showMessageValidate(
-        `card is blocked, you are redirecting to main page`,
-        "error",
-        "verification-code"
-      );
-      setTimeout(() => {
-        window.location.href = "index.html";
-        return false;
-      }, 2000);
-    } else {
-      showMessageValidate(
-        `code is wrong, try again you have ${triesCount} try`,
-        "error",
-        "verification-code"
-      );
-      triesCount--;
-      return false;
-    }
-  } else {
-    const totalPrice = Number(localStorage.getItem("totalPrice"));
-
-    if (Number(totalPrice) > Number(card.balance)) {
-      showMessageValidate(
-        `balance is not enought your balance: ${card.balance}`,
-        "error",
-        "verification-code"
-      );
-      return false;
-    }
-
-    const updatedBalance = card.balance - totalPrice;
-
-    const fullCardData = {
-      ...card,
-      balance: updatedBalance,
-    };
-
-    CompleteOrderUpdateBalance(card, fullCardData);
-  }
+  cardValidation(code, card);
 }
 
 function CompleteOrderUpdateBalance(card, fullCardData) {
@@ -360,10 +320,15 @@ function CompleteOrderUpdateBalance(card, fullCardData) {
     .then((response) => {
       if (response.ok) {
         showMessageValidate(
-          `code is true thanks for your order`,
+          `code is true thanks for your order, you are redirecting...`,
           "success",
           "verification-code"
         );
+
+        cleanBasket();
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1500);
       } else {
         showMessageValidate(
           `Failed to complete order`,
@@ -441,4 +406,62 @@ function otpCodeContainer() {
         </form>
         <div id="toast-notification"></div>
     </div>`;
+}
+
+function cardValidation(code, card) {
+  if (Number(code) !== card.code) {
+    if (triesCount == 0) {
+      showMessageValidate(
+        `card is blocked, you are redirecting to main page`,
+        "error",
+        "verification-code"
+      );
+      setTimeout(() => {
+        window.location.href = "index.html";
+        return false;
+      }, 2000);
+    } else {
+      showMessageValidate(
+        `code is wrong, try again you have ${triesCount} try`,
+        "error",
+        "verification-code"
+      );
+      triesCount--;
+      return false;
+    }
+  } else {
+    const totalPrice = Number(localStorage.getItem("totalPrice"));
+
+    if (Number(totalPrice) > Number(card.balance)) {
+      showMessageValidate(
+        `balance is not enought, your balance: ${card.balance}`,
+        "error",
+        "verification-code"
+      );
+      return false;
+    }
+
+    const btn = document.getElementById("smtButton");
+    btn.classList = "disabled";
+
+    const updatedBalance = card.balance - totalPrice;
+
+    const fullCardData = {
+      ...card,
+      balance: updatedBalance,
+    };
+
+    CompleteOrderUpdateBalance(card, fullCardData);
+
+    return true;
+  }
+}
+
+function cleanBasket() {
+  let user = localStorage.getItem("loggedInUser");
+  user = JSON.parse(user);
+  console.log(user);
+  user = { ...user, basket: [] };
+
+  saveUser(user);
 }

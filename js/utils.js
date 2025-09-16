@@ -44,7 +44,7 @@ function saveUser(user) {
 
     localStorage.setItem("users", JSON.stringify(users));
   } catch (e) {
-    console.error("saveUser error:", e);
+    console.error("save User error:", e);
   }
 }
 
