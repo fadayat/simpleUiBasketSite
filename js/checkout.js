@@ -58,12 +58,38 @@ function FormatCardNumberInput(e) {
   }
 }
 
+let lastValidValue = "";
+
 function formatCardDateInput(e) {
   let value = e.target.value;
 
-  isOnlyNumber(value, "Only numbers are allowed", "error", "expiry-date");
+  const isValid = isOnlyNumber(
+    value,
+    "Only numbers are allowed",
+    "error",
+    "expiry-date"
+  );
+
+  if (!isValid) {
+    e.target.value = lastValidValue;
+    return;
+  }
 
   let cleanedValue = value.replace(/[^\d/]/g, "");
+
+  let digits = Number(cleanedValue.slice(0, 2));
+
+  if (digits < 0 || digits > 12) {
+    showMessageValidate(
+      "password month must be till 12",
+      "error",
+      "expiry-date"
+    );
+    e.target.value = lastValidValue;
+    return;
+  } else {
+    hideMessageValidate("expiry-date");
+  }
 
   e.target.value = cleanedValue;
 
@@ -107,6 +133,10 @@ function isOnlyNumber(value, message, type, place) {
       isNumbers = /^\d+$/.test(value);
       break;
 
+    case "verification-code":
+      isNumbers = /^\d+$/.test(value);
+      break;
+
     default:
       isNumbers = false;
       break;
@@ -122,4 +152,316 @@ function isOnlyNumber(value, message, type, place) {
   }
 
   return isNumbers;
+}
+
+async function handlePay(e) {
+  e.preventDefault();
+  const isValid = validateInputs();
+
+  const spinner = document.getElementById("submit-spinner");
+  const btn = document.getElementById("submit-btn");
+
+  spinner.style.display = "inline-block";
+  btn.disabled = true;
+
+  if (isValid) {
+    try {
+      console.log("card yoxlanilir");
+
+      const data = await fetchAllCards();
+      checkCard(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  spinner.style.display = "none";
+  btn.disabled = false;
+}
+
+function validateInputs() {
+  const isCardValid = cardNumberValidate();
+
+  const isDateValid = expiryDateValidate();
+
+  const isCvcValid = cvcValidate();
+
+  return isCardValid && isDateValid && isCvcValid;
+}
+
+function cardNumberValidate() {
+  const value = getElByIdValue("card-number");
+
+  if (!value.trim()) {
+    showMessageValidate(
+      "please fill card number input",
+      "error",
+      "card-number"
+    );
+    return false;
+  } else if (value.trim().length !== 19) {
+    showMessageValidate(
+      "please write card number with 16 number ",
+      "error",
+      "card-number"
+    );
+    return false;
+  }
+  return true;
+}
+
+function expiryDateValidate() {
+  const value = getElByIdValue("expiry-date");
+
+  if (!value.trim()) {
+    showMessageValidate(
+      "please fill expiry date input",
+      "error",
+      "expiry-date"
+    );
+    return false;
+  } else if (value.trim().length !== 5) {
+    showMessageValidate("please fill this input full", "error", "expiry-date");
+    return false;
+  }
+  return true;
+}
+
+function cvcValidate() {
+  const value = getElByIdValue("cvc");
+
+  if (!value.trim()) {
+    showMessageValidate("please fill cvc input", "error", "cvc");
+    return false;
+  } else if (value.trim().length !== 3) {
+    showMessageValidate("please fill cvc input full", "error", "cvc");
+    return false;
+  }
+  return true;
+}
+
+async function fetchAllCards() {
+  const res = await fetch(
+    "https://68be722b227c48698f86d903.mockapi.io/api/products/cards"
+  );
+
+  const data = await res.json();
+
+  return data;
+}
+
+function checkCard(cards) {
+  const number = Number(
+    getElByIdValue("card-number").trim().replace(/\s/g, "")
+  );
+  const dateFull = getElByIdValue("expiry-date");
+  const cvc = Number(getElByIdValue("cvc"));
+
+  let card = cards.find((card) => number == card.cardNumber);
+
+  if (!card) {
+    showMessageValidate("card number is invalid", "error", "card-number");
+    return;
+  }
+
+  if (dateFull) {
+    let [month, year] = dateFull.split("/");
+    month = Number(month);
+    year = Number(year);
+
+    if (month !== card.expiryMonth) {
+      showMessageValidate("month is invalid", "error", "expiry-date");
+      return;
+    }
+
+    if (year !== card.expiryYear) {
+      showMessageValidate("card  year is invalid", "error", "expiry-date");
+      return;
+    }
+  }
+
+  if (cvc !== card.cvc) {
+    showMessageValidate("cvc is invalid", "error", "cvc");
+    return;
+  }
+
+  localStorage.setItem("nowPayCardId", card.id);
+
+  otpCodeContainer();
+}
+
+let triesCount = 2;
+async function handleVerificationSubmit(e) {
+  e.preventDefault();
+
+  code = getElByIdValue("verification-code");
+
+  const letterCount = checkLetterCount(code);
+  if (!letterCount) {
+    return;
+  }
+
+  const card = await getCard();
+
+  cardValidation(code, card);
+}
+
+function CompleteOrderUpdateBalance(card, fullCardData) {
+  fetch(
+    `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${card.id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(fullCardData),
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        showMessageValidate(
+          `code is true thanks for your order, you are redirecting...`,
+          "success",
+          "verification-code"
+        );
+
+        cleanBasket();
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1500);
+      } else {
+        showMessageValidate(
+          `Failed to complete order`,
+          "error",
+          "verification-code"
+        );
+      }
+    })
+    .catch((error) => {
+      showMessageValidate(
+        `error, please try again, error: ${error}`,
+        "error",
+        "verification-code"
+      );
+    });
+}
+
+function checkLetterCount(code) {
+  if (code.length != 4) {
+    showMessageValidate(
+      "code  must be  4 charackter",
+      "error",
+      "verification-code"
+    );
+    return false;
+  } else {
+    hideMessageValidate("verification-code");
+    return true;
+  }
+}
+async function getCard() {
+  const id = localStorage.getItem("nowPayCardId");
+
+  const res = await fetch(
+    `https://68be722b227c48698f86d903.mockapi.io/api/products/cards/${id}`
+  );
+
+  const card = await res.json();
+  return card;
+}
+
+function formatVerificationInp(e) {
+  let value = e.target.value;
+
+  if (value != "")
+    isOnlyNumber(
+      value,
+      "Only numbers are allowed",
+      "error",
+      "verification-code"
+    );
+
+  let cleanedValue = value.replace(/\D/g, "");
+
+  e.target.value = cleanedValue;
+}
+
+function otpCodeContainer() {
+  main = document.getElementById("main");
+  main.innerHTML = "";
+
+  main.innerHTML = `
+    <div class="form-container">
+        <form onsubmit="handleVerificationSubmit(event)">
+            <h2>Verification Code</h2>
+            <p>Enter the verification code sent by your bank to complete the payment.</p>
+            <div class="input-piece">
+                <label for="verification-code">Otp Code</label>
+                <input inputmode="numeric" maxlength="4" type="text"  id="verification-code" oninput="formatVerificationInp(event)" placeholder="Enter the Code" />
+            </div>
+            <button id='smtButton' type="submit">
+                <span>Verify the payment</span>
+                <span id="submit-spinner" class="spinner"></span>
+            </button>
+        </form>
+        <div id="toast-notification"></div>
+    </div>`;
+}
+
+function cardValidation(code, card) {
+  if (Number(code) !== card.code) {
+    if (triesCount == 0) {
+      showMessageValidate(
+        `card is blocked, you are redirecting to main page`,
+        "error",
+        "verification-code"
+      );
+      setTimeout(() => {
+        window.location.href = "index.html";
+        return false;
+      }, 2000);
+    } else {
+      showMessageValidate(
+        `code is wrong, try again you have ${triesCount} try`,
+        "error",
+        "verification-code"
+      );
+      triesCount--;
+      return false;
+    }
+  } else {
+    const totalPrice = Number(localStorage.getItem("totalPrice"));
+
+    if (Number(totalPrice) > Number(card.balance)) {
+      showMessageValidate(
+        `balance is not enought, your balance: ${card.balance}`,
+        "error",
+        "verification-code"
+      );
+      return false;
+    }
+
+    const btn = document.getElementById("smtButton");
+    btn.classList = "disabled";
+
+    const updatedBalance = card.balance - totalPrice;
+
+    const fullCardData = {
+      ...card,
+      balance: updatedBalance,
+    };
+
+    CompleteOrderUpdateBalance(card, fullCardData);
+
+    return true;
+  }
+}
+
+function cleanBasket() {
+  let user = localStorage.getItem("loggedInUser");
+  user = JSON.parse(user);
+  console.log(user);
+  user = { ...user, basket: [] };
+
+  saveUser(user);
 }

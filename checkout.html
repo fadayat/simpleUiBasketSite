@@ -8,22 +8,21 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <main class="container">
+    <main id="main" class="container">
       <div class="form-container">
-        <form id="payment-form">
+        <form novalidate id="payment-form">
           <h2>Payment Details</h2>
           <div id="order-summary"></div>
 
           <div class="input-piece">
             <label for="card-number">Card Number</label>
             <input
+              autofocus
               oninput="FormatCardNumberInput(event)"
               maxlength="19"
-              class="no-spinner"
               type="text"
               id="card-number"
               placeholder="0000 0000 0000 0000"
-              required
             />
           </div>
 
@@ -35,11 +34,9 @@
                 style="width: 100%"
                 oninput="formatCardDateInput(event)"
                 maxlength="5"
-                class="no-spinner"
                 type="text"
                 id="expiry-date"
                 placeholder="MM/YY"
-                required
               />
             </div>
             <div class="form-group cvc">
@@ -49,16 +46,17 @@
                 style="width: 100%"
                 oninput="formatCvcInput(event)"
                 maxlength="3"
-                class="no-spinner"
                 type="text"
                 id="cvc"
                 placeholder="123"
-                required
               />
             </div>
           </div>
 
-          <button onclick="handlePay(event)" type="submit">Pay Now</button>
+          <button onclick="handlePay(event)" type="submit">
+            <span id="submit-btn">Pay now</span>
+            <span id="submit-spinner" class="spinner"></span>
+          </button>
         </form>
       </div>
       <div class="order-summary-container">

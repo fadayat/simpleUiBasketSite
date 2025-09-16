@@ -44,7 +44,7 @@ function saveUser(user) {
 
     localStorage.setItem("users", JSON.stringify(users));
   } catch (e) {
-    console.error("saveUser error:", e);
+    console.error("save User error:", e);
   }
 }
 
@@ -73,4 +73,6 @@ function hideMessageValidate(place) {
   }
 }
 
-function isOnlyNumber() {}
+function getElByIdValue(id) {
+  return document.getElementById(id).value;
+}
