@@ -320,7 +320,7 @@ function CompleteOrderUpdateBalance(card, fullCardData) {
     .then((response) => {
       if (response.ok) {
         showMessageValidate(
-          `code is true thanks for your order, you are redirecting...`,
+          `code is true thanks for your order, you are redirecting to main page`,
           "success",
           "verification-code"
         );
@@ -329,6 +329,7 @@ function CompleteOrderUpdateBalance(card, fullCardData) {
         setTimeout(() => {
           window.location.href = "index.html";
         }, 1500);
+        return true;
       } else {
         showMessageValidate(
           `Failed to complete order`,
@@ -434,10 +435,13 @@ function cardValidation(code, card) {
 
     if (Number(totalPrice) > Number(card.balance)) {
       showMessageValidate(
-        `balance is not enought, your balance: ${card.balance}`,
+        `balance is not enought, your balance: ${card.balance}, you are redirecting to checkout page`,
         "error",
         "verification-code"
       );
+      setTimeout(() => {
+        window.location.href = "checkout.html";
+      }, 1500);
       return false;
     }
 
