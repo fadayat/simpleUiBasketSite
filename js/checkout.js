@@ -255,6 +255,7 @@ async function fetchAllCards() {
 }
 
 function checkCard(cards) {
+  const installmentYes = localStorage.getItem("installment");
   const number = Number(
     getElByIdValue("card-number").trim().replace(/\s/g, "")
   );
@@ -268,6 +269,16 @@ function checkCard(cards) {
     return;
   }
 
+  if (installmentYes) {
+    if (card.installment !== true) {
+      showMessageValidate(
+        "this card doesnt support to pay in installment",
+        "error",
+        "cvc"
+      );
+    }
+    return;
+  }
   if (dateFull) {
     let [month, year] = dateFull.split("/");
     month = Number(month);
@@ -426,7 +437,7 @@ function cardValidation(code, card, tryCount) {
       );
       setTimeout(() => {
         window.location.href = "index.html";
-        return false;
+        return;
       }, 2000);
     } else {
       showMessageValidate(
@@ -437,7 +448,7 @@ function cardValidation(code, card, tryCount) {
 
       tryCount--;
       form.dataset.tries = tryCount;
-      return false;
+      return;
     }
   } else {
     const totalPrice = Number(localStorage.getItem("totalPrice"));
@@ -451,7 +462,7 @@ function cardValidation(code, card, tryCount) {
       setTimeout(() => {
         window.location.href = "checkout.html";
       }, 1500);
-      return false;
+      return;
     }
 
     const btn = document.getElementById("smtButton");
@@ -480,10 +491,10 @@ function cleanBasket() {
 }
 
 function handleInstallment(e) {
-  installment = e.target.value;
   const btn = document.getElementById("installmentYes");
 
   let localInstallament = localStorage.getItem("installment");
+
   if (localInstallament) {
     btn?.classList?.remove("installmentYes");
     localStorage.removeItem("installment");
