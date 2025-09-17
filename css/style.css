@@ -595,7 +595,7 @@ button[type="submit"]:hover {
   width: 100%;
   padding: 12px;
   margin: 8px 0;
-  background-color: var(--primary-color);
+  background-color: var(--dark-color);
   color: var(--light-color);
   border: none;
   border-radius: 5px;
@@ -604,5 +604,5 @@ button[type="submit"]:hover {
 }
 
 .installmentYes {
-  background-color: var(--success-color);
+  background-color: var(--primary-color);
 }
