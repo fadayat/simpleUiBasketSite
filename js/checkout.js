@@ -11,6 +11,9 @@ function displayOrderSummary() {
   freeShippingms = document.getElementById("shipping-message");
   summaryTotal = document.getElementById("summary-total");
   summarySubtotal = document.getElementById("summary-subtotal");
+  installment = localStorage.getItem("installment");
+
+  installment && localStorage.removeItem("installment");
 
   // Get total price from localStorage
   let totalPrice = Number(localStorage.getItem("totalPrice"));
@@ -474,4 +477,18 @@ function cleanBasket() {
   user = { ...user, basket: [] };
 
   saveUser(user);
+}
+
+function handleInstallment(e) {
+  installment = e.target.value;
+  const btn = document.getElementById("installmentYes");
+
+  let localInstallament = localStorage.getItem("installment");
+  if (localInstallament) {
+    btn?.classList?.remove("installmentYes");
+    localStorage.removeItem("installment");
+  } else {
+    btn?.classList?.add("installmentYes");
+    localStorage.setItem("installment", 1);
+  }
 }

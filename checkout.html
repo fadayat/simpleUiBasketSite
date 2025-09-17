@@ -52,8 +52,20 @@
               />
             </div>
           </div>
+          <div class="installment">
+            <label for=""> Would you like to pay in installments?</label>
 
-          <button onclick="handlePay(event)" type="submit">
+            <button
+              class="installment_btn"
+              type="button"
+              id="installmentYes"
+              onclick="handleInstallment(event)"
+              value="1"
+            >
+              YES
+            </button>
+          </div>
+          <button type="submit" onclick="handlePay(event)" type="submit">
             <span id="submit-btn">Pay now</span>
             <span id="submit-spinner" class="spinner"></span>
           </button>

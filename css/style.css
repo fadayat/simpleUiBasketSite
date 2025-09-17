@@ -585,3 +585,24 @@ button[type="submit"]:hover {
 #submit-spinner {
   display: none;
 }
+
+.installment_btns {
+  display: flex;
+  gap: 8px;
+}
+
+.installment_btn {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  background-color: var(--primary-color);
+  color: var(--light-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.installmentYes {
+  background-color: var(--success-color);
+}
