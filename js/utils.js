@@ -76,3 +76,10 @@ function hideMessageValidate(place) {
 function getElByIdValue(id) {
   return document.getElementById(id).value;
 }
+
+function userIsLogin() {
+  const loggedIn = localStorage.getItem("loggedInUser");
+  if (loggedIn && loggedIn !== undefined) {
+    window.location.href = "index.html";
+  }
+}

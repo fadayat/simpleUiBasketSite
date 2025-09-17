@@ -64,6 +64,7 @@ function logoutStyleFn() {
 
 function logoutClickFn() {
   localStorage.removeItem("loggedInUser");
+  localStorage.removeItem("totalPrice");
   logoutAllStyle();
   showMessageToast("successfully log out");
 }
