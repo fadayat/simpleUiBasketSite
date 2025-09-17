@@ -1,5 +1,3 @@
-// checkout.js
-
 document.addEventListener("DOMContentLoaded", () => {
   // Function to display order summary
   displayOrderSummary();
@@ -16,6 +14,9 @@ function displayOrderSummary() {
 
   // Get total price from localStorage
   let totalPrice = Number(localStorage.getItem("totalPrice"));
+  if (!totalPrice) {
+    window.location.href = "index.html";
+  }
 
   // Update the sub summary section
   summarySubtotal.textContent = totalPrice + " AZN";
@@ -290,8 +291,9 @@ function checkCard(cards) {
   otpCodeContainer();
 }
 
-let triesCount = 2;
 async function handleVerificationSubmit(e) {
+  const form = document.getElementById("verification-form");
+
   e.preventDefault();
 
   code = getElByIdValue("verification-code");
@@ -303,7 +305,7 @@ async function handleVerificationSubmit(e) {
 
   const card = await getCard();
 
-  cardValidation(code, card);
+  cardValidation(code, card, form.dataset.tries);
 }
 
 function CompleteOrderUpdateBalance(card, fullCardData) {
@@ -393,7 +395,7 @@ function otpCodeContainer() {
 
   main.innerHTML = `
     <div class="form-container">
-        <form onsubmit="handleVerificationSubmit(event)">
+        <form id="verification-form" onsubmit="handleVerificationSubmit(event)" data-tries="2">
             <h2>Verification Code</h2>
             <p>Enter the verification code sent by your bank to complete the payment.</p>
             <div class="input-piece">
@@ -409,9 +411,11 @@ function otpCodeContainer() {
     </div>`;
 }
 
-function cardValidation(code, card) {
+function cardValidation(code, card, tryCount) {
+  const form = document.getElementById("verification-form");
+
   if (Number(code) !== card.code) {
-    if (triesCount == 0) {
+    if (tryCount == 0) {
       showMessageValidate(
         `card is blocked, you are redirecting to main page`,
         "error",
@@ -423,11 +427,13 @@ function cardValidation(code, card) {
       }, 2000);
     } else {
       showMessageValidate(
-        `code is wrong, try again you have ${triesCount} try`,
+        `code is wrong, try again you have ${tryCount} try`,
         "error",
         "verification-code"
       );
-      triesCount--;
+
+      tryCount--;
+      form.dataset.tries = tryCount;
       return false;
     }
   } else {

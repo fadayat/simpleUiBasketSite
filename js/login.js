@@ -1,11 +1,7 @@
 const usernameInp = document.getElementById("username");
 const passwordInp = document.getElementById("password");
 
-const loggedIn = localStorage.getItem("loggedInUser");
-if (loggedIn && loggedIn !== undefined) {
-  window.location.href = "index.html";
-}
-
+userIsLogin();
 // MOCK USERS
 let users = [
   {
