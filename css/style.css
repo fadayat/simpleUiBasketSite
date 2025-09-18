@@ -606,3 +606,57 @@ button[type="submit"]:hover {
 .installmentYes {
   background-color: var(--primary-color);
 }
+
+#installment-months {
+  width: 100%;
+  text-align: center;
+  padding: 8px 0;
+  margin: 0 0 8px 0;
+  border: none;
+  border-radius: 5px;
+  display: none;
+  background-color: var(--primary-color);
+
+  color: var(--light-color);
+}
+
+select option {
+  color: var(--light-color);
+  background-color: var(--primary-color);
+  font-size: 16px;
+}
+
+.monthly-payment {
+  background-color: var(--light-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: var(--shadow);
+  text-align: center;
+  display: none;
+}
+
+.monthly-payment-card h3 {
+  font-size: 1.1rem;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.monthly-payment-card .payment-amount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.installment-info {
+  background-color: var(--light-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: var(--shadow);
+  text-align: center;
+  font-weight: bold;
+  color: var(--primary-color);
+}

@@ -66,11 +66,21 @@
             >
               YES
             </button>
+            <select onclick="handleMonth(event)" id="installment-months">
+              <option selected disabled value="">-</option>
+              <option value="3">3 ay</option>
+              <option value="6">6 ay</option>
+              <option value="12">12 ay</option>
+            </select>
           </div>
           <button type="submit" onclick="handlePay(event)" type="submit">
             <span id="submit-btn">Pay now</span>
             <span id="submit-spinner" class="spinner"></span>
           </button>
+          <div id="monthlyPayMainDiv" class="monthly-payment">
+            <h3>Monthly paymant total</h3>
+            <div id="monthlyPay" class="payment-amount">0.00 AZN</div>
+          </div>
         </form>
       </div>
       <div class="order-summary-container">
