@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Function to display order summary
   displayOrderSummary();
+  localStorage.removeItem("installmentMonth");
 
   //   validatePaymentInputs();
 });
@@ -11,6 +12,9 @@ function displayOrderSummary() {
   freeShippingms = document.getElementById("shipping-message");
   summaryTotal = document.getElementById("summary-total");
   summarySubtotal = document.getElementById("summary-subtotal");
+  installment = localStorage.getItem("installment");
+
+  installment && localStorage.removeItem("installment");
 
   // Get total price from localStorage
   let totalPrice = Number(localStorage.getItem("totalPrice"));
@@ -252,17 +256,41 @@ async function fetchAllCards() {
 }
 
 function checkCard(cards) {
+  const installmentYes = localStorage.getItem("installment");
+  const select = getElByIdValue("installment-months");
+  let hasMonth = select
+    ? Number(select)
+    : Number(localStorage.getItem("installmentMonth"));
+
+  console.log(hasMonth);
+
   const number = Number(
     getElByIdValue("card-number").trim().replace(/\s/g, "")
   );
   const dateFull = getElByIdValue("expiry-date");
   const cvc = Number(getElByIdValue("cvc"));
 
+  if (![3, 6, 12].includes(hasMonth) && installmentYes) {
+    showMessageValidate("please select month", "error", "installment-months");
+    return;
+  }
+
   let card = cards.find((card) => number == card.cardNumber);
 
   if (!card) {
     showMessageValidate("card number is invalid", "error", "card-number");
     return;
+  }
+
+  if (installmentYes) {
+    if (card.installment !== true) {
+      showMessageValidate(
+        "this card doesnt support to pay in installment",
+        "error",
+        "cvc"
+      );
+      return;
+    }
   }
 
   if (dateFull) {
@@ -288,11 +316,23 @@ function checkCard(cards) {
 
   localStorage.setItem("nowPayCardId", card.id);
 
-  otpCodeContainer();
+  let installment = false;
+  if (hasMonth && installmentYes) {
+    installment = true;
+  }
+
+  otpCodeContainer(installment, hasMonth);
 }
 
 async function handleVerificationSubmit(e) {
   const form = document.getElementById("verification-form");
+  let installament = document.getElementById("installament-payment");
+
+  if (installament) {
+    installament = true;
+  } else {
+    installament = false;
+  }
 
   e.preventDefault();
 
@@ -305,7 +345,7 @@ async function handleVerificationSubmit(e) {
 
   const card = await getCard();
 
-  cardValidation(code, card, form.dataset.tries);
+  cardValidation(code, card, form.dataset.tries, installament);
 }
 
 function CompleteOrderUpdateBalance(card, fullCardData) {
@@ -389,8 +429,9 @@ function formatVerificationInp(e) {
   e.target.value = cleanedValue;
 }
 
-function otpCodeContainer() {
-  main = document.getElementById("main");
+function otpCodeContainer(installment, month) {
+  const main = document.getElementById("main");
+  const total = localStorage.getItem("totalPrice");
   main.innerHTML = "";
 
   main.innerHTML = `
@@ -400,18 +441,28 @@ function otpCodeContainer() {
             <p>Enter the verification code sent by your bank to complete the payment.</p>
             <div class="input-piece">
                 <label for="verification-code">Otp Code</label>
-                <input inputmode="numeric" maxlength="4" type="text"  id="verification-code" oninput="formatVerificationInp(event)" placeholder="Enter the Code" />
+                <input inputmode="numeric" maxlength="4" type="text" id="verification-code" oninput="formatVerificationInp(event)" placeholder="Enter the Code" />
             </div>
             <button id='smtButton' type="submit">
                 <span>Verify the payment</span>
                 <span id="submit-spinner" class="spinner"></span>
             </button>
+
+            ${
+              installment
+                ? `<div class="installment-info">
+                    <p id="installament-payment" >Installament Payment</p>
+                    <p>${month} month </p>
+                    <p>Monthly Payment ${total / month} </p>
+                   </div>`
+                : ""
+            }
         </form>
         <div id="toast-notification"></div>
     </div>`;
 }
 
-function cardValidation(code, card, tryCount) {
+function cardValidation(code, card, tryCount, installament) {
   const form = document.getElementById("verification-form");
 
   if (Number(code) !== card.code) {
@@ -423,7 +474,7 @@ function cardValidation(code, card, tryCount) {
       );
       setTimeout(() => {
         window.location.href = "index.html";
-        return false;
+        return;
       }, 2000);
     } else {
       showMessageValidate(
@@ -434,7 +485,7 @@ function cardValidation(code, card, tryCount) {
 
       tryCount--;
       form.dataset.tries = tryCount;
-      return false;
+      return;
     }
   } else {
     const totalPrice = Number(localStorage.getItem("totalPrice"));
@@ -448,13 +499,17 @@ function cardValidation(code, card, tryCount) {
       setTimeout(() => {
         window.location.href = "checkout.html";
       }, 1500);
-      return false;
+      return;
     }
 
     const btn = document.getElementById("smtButton");
     btn.classList = "disabled";
 
-    const updatedBalance = card.balance - totalPrice;
+    if (installament) {
+      updatedBalance = card.balance;
+    } else {
+      const updatedBalance = card.balance - totalPrice;
+    }
 
     const fullCardData = {
       ...card,
@@ -474,4 +529,59 @@ function cleanBasket() {
   user = { ...user, basket: [] };
 
   saveUser(user);
+}
+
+function handleInstallment(e) {
+  const btn = document.getElementById("installmentYes");
+
+  let localInstallament = localStorage.getItem("installment");
+
+  const select = document.getElementById("installment-months");
+
+  const monthlyPaymentMainDiv = document.getElementById("monthlyPayMainDiv");
+
+  if (localInstallament) {
+    btn?.classList?.remove("installmentYes");
+    localStorage.removeItem("installment");
+    select.style.display = "none";
+    localStorage.removeItem("installmentMonth");
+    monthlyPaymentMainDiv.style.display = "none";
+  } else {
+    btn?.classList?.add("installmentYes");
+    localStorage.setItem("installment", 1);
+    select.style.display = "inline-block";
+  }
+  chooseMonth();
+}
+
+function chooseMonth() {
+  const month = document.getElementById("installment-months");
+
+  const label = document.getElementById("installmentYesLabel");
+  const monthlyPay = document.getElementById("monthlyPay");
+  label.textContent =
+    label.textContent === "Choose Month"
+      ? "Would you like to pay in installments?"
+      : "Choose Month";
+}
+
+function handleMonth(e) {
+  localStorage.setItem("installmentMonth", e.target.value);
+  showMonthlyPay();
+}
+
+function showMonthlyPay() {
+  const totalPrice = Number(localStorage.getItem("totalPrice"));
+  const month = Number(localStorage.getItem("installmentMonth"));
+
+  monthlyPaymentDiv = document.getElementById("monthlyPay");
+  monthlyPaymentMainDiv = document.getElementById("monthlyPayMainDiv");
+
+  monthlyPayment = totalPrice / Number(month);
+  monthlyPaymentDiv.textContent = monthlyPayment;
+  console.log(month);
+
+  if (month !== 0) {
+    monthlyPaymentMainDiv.style.display = "block";
+  }
 }
