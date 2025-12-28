@@ -30,7 +30,7 @@ function showMessageToast(message = "something happened", type = "success") {
   setTimeout(() => notification.classList.remove("show"), 1000);
 }
 
-// Save or update user in local storage
+// Save or update user in local storage its for learning, dont use localstorage for it
 function saveUser(user) {
   if (!user) return;
 
@@ -79,7 +79,7 @@ function getElByIdValue(id) {
 
 function userIsLogin() {
   const loggedIn = localStorage.getItem("loggedInUser");
-  if (loggedIn && loggedIn !== undefined) {
+  if (loggedIn && loggedIn !== "undefined") {
     window.location.href = "index.html";
   }
 }
